@@ -1,0 +1,13 @@
+# Node.js dependencies
+node_modules/
+
+# Production build (optional, if you don't want to track dist in git)
+dist/
+
+# OS or editor files
+.DS_Store
+Thumbs.db
+
+# Test and temp files
+testfile.txt
+*.log 
