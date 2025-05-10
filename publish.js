@@ -1,12 +1,14 @@
 // publish.js
 // Usage: node publish.js
 // Copies the project to 'dist' and strips test code from JS files in the copy.
+// Use with: git add dist && git commit -m 'Deploy' && git push
 
 const fs = require('fs');
 const path = require('path');
 
 const SRC_DIR = process.cwd();
 const DIST_DIR = path.join(SRC_DIR, 'dist');
+const DEV_SCRIPTS = ['publish.js', 'strip_testing_code.js'];
 
 function copyDir(src, dest) {
   if (!fs.existsSync(dest)) fs.mkdirSync(dest);
@@ -14,8 +16,12 @@ function copyDir(src, dest) {
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
     if (entry.isDirectory()) {
+      // Skip .git and dist itself
+      if (entry.name === '.git' || entry.name === 'dist') continue;
       copyDir(srcPath, destPath);
     } else {
+      // Skip dev scripts
+      if (DEV_SCRIPTS.includes(entry.name)) continue;
       fs.copyFileSync(srcPath, destPath);
     }
   }
