@@ -93,7 +93,7 @@ function renderTree() {
     
     // Add text labels
     node.append('text')
-        .attr('dy', '.31em')
+        .attr('dy', '1.5em')
         .attr('x', d => d.children ? -9 : 9)
         .attr('text-anchor', d => d.children ? 'end' : 'start')
         .attr('fill', d => {
@@ -112,7 +112,7 @@ function renderTree() {
     // Add gloss labels where they differ from the word
     node.filter(d => shouldRevealNode(d) && d.data.gloss && d.data.gloss !== d.data.word)
         .append('text')
-        .attr('dy', '1.5em')
+        .attr('dy', '3em')
         .attr('x', d => d.children ? -9 : 9)
         .attr('text-anchor', d => d.children ? 'end' : 'start')
         .attr('fill', '#888')
