@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Etymol</title>
+  <title>Etymol: Find Related Words</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main id="game-container">
-    <h1>Etymol</h1>
-    <div id="word-of-the-day"></div>
-    <form id="guess-form" autocomplete="off">
-      <label for="guess-input">Guess the language origin:</label>
-      <input type="text" id="guess-input" name="guess" required autofocus />
-      <button type="submit">Submit</button>
+  <div id="game-container">
+    <h1>Etymol: Find Related Words</h1>
+    <div id="root-word-container">
+      Root word: <span id="root-word">...</span>
+    </div>
+    <form id="guess-form">
+      <input type="text" id="guess-input" autocomplete="off" placeholder="Enter a related word..." required>
+      <button type="submit">Guess</button>
     </form>
-    <div id="feedback"></div>
-    <div id="progress"></div>
-  </main>
-  <script src="words.js"></script>
+    <div id="progress">0/0 found</div>
+    <ul id="guessed-words"></ul>
+    <button id="reveal-btn">Reveal All</button>
+  </div>
+  <script src="related_words.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
