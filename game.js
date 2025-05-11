@@ -9,14 +9,32 @@ function initGame() {
     currentWord = GAME_DATA.word_list[0];
     treeData = GAME_DATA.words[currentWord].tree;
     
+    // Add the clue word to guessed words (it's pre-revealed)
+    guessedWords.add(currentWord);
+    
     // Display the clue word
     document.getElementById('clue-word').textContent = `Clue: ${currentWord}`;
     
-    // Render the initial tree (with English words redacted)
+    // Render the initial tree (with English words redacted, except clue word)
     renderTree();
     
     // Focus the input field
     document.getElementById('guess-input').focus();
+}
+
+// Check if a node should be revealed based on its children
+function shouldRevealNode(node) {
+    // Always reveal guessed words
+    if (guessedWords.has(node.data.word)) {
+        return true;
+    }
+    
+    // For non-guessed words, check if all children are revealed
+    if (node.children) {
+        return node.children.every(child => shouldRevealNode(child));
+    }
+    
+    return false;
 }
 
 // Render the etymology tree using D3
@@ -71,22 +89,32 @@ function renderTree() {
     // Add circles to nodes
     node.append('circle')
         .attr('r', 5)
-        .attr('fill', d => d.data.lang === 'en' && !guessedWords.has(d.data.word) ? '#333' : '#fff');
+        .attr('fill', d => {
+            if (shouldRevealNode(d)) {
+                return '#fff';
+            }
+            return '#333';
+        });
     
     // Add text labels
     node.append('text')
         .attr('dy', '.31em')
         .attr('x', d => d.children ? -9 : 9)
         .attr('text-anchor', d => d.children ? 'end' : 'start')
-        .attr('fill', d => d.data.lang === 'en' && !guessedWords.has(d.data.word) ? '#666' : '#fff')
+        .attr('fill', d => {
+            if (shouldRevealNode(d)) {
+                return '#fff';
+            }
+            return '#666';
+        })
         .text(d => {
-            if (d.data.lang === 'en' && !guessedWords.has(d.data.word)) {
+            if (!shouldRevealNode(d)) {
                 return '???';
             }
             return d.data.word;
         })
         .on('mouseover', function(event, d) {
-            if (d.data.gloss) {
+            if (d.data.gloss && shouldRevealNode(d)) {
                 tooltip.transition()
                     .duration(200)
                     .style('opacity', .9);
@@ -100,13 +128,6 @@ function renderTree() {
                 .duration(500)
                 .style('opacity', 0);
         });
-    
-    // Add gloss text
-    node.append('text')
-        .attr('dy', '1.5em')
-        .attr('x', d => d.children ? -9 : 9)
-        .attr('text-anchor', d => d.children ? 'end' : 'start')
-        .attr('fill', '#888')
 }
 
 // Handle word guesses
