@@ -13,7 +13,7 @@ function initGame() {
     guessedWords.add(currentWord);
     
     // Display the clue word
-    document.getElementById('clue-word').textContent = `Clue: ${currentWord}`;
+    document.getElementById('clue-word').textContent = currentWord;
     
     // Render the initial tree (with English words redacted, except clue word)
     renderTree();
