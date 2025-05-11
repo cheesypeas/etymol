@@ -1,99 +1,147 @@
-// --- TESTING ONLY: Random word for development ---
-function getQueryParam(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
-}
-function getRandomWord() {
-  return words[Math.floor(Math.random() * words.length)];
-}
-// --- END TESTING ONLY ---
+// Game state
+let currentWord;
+let guessedWords = new Set();
+let treeData;
 
-// Select a word of the day based on UTC days since a fixed start date
-function getWordOfTheDay() {
-  // TESTING ONLY: Use random word if ?random=1
-  if (typeof getQueryParam === 'function' && getQueryParam('random') === '1') {
-    return getRandomWord();
-  }
-  // Use UTC date to avoid timezone differences
-  const now = new Date();
-  const utcYear = now.getUTCFullYear();
-  const utcMonth = now.getUTCMonth();
-  const utcDate = now.getUTCDate();
-  // Set a fixed start date (e.g., Jan 1, 2024)
-  const start = new Date(Date.UTC(2024, 0, 1));
-  const today = new Date(Date.UTC(utcYear, utcMonth, utcDate));
-  // Calculate days since start date
-  const daysSinceStart = Math.floor((today - start) / (1000 * 60 * 60 * 24));
-  // Use modulo to cycle through words
-  return words[(daysSinceStart % words.length + words.length) % words.length];
+// Initialize the game
+function initGame() {
+    // Get the daily word (for now, just use the first word in the list)
+    currentWord = GAME_DATA.word_list[0];
+    treeData = GAME_DATA.words[currentWord].tree;
+    
+    // Display the clue word
+    document.getElementById('clue-word').textContent = `Clue: ${currentWord}`;
+    
+    // Render the initial tree (with English words redacted)
+    renderTree();
+    
+    // Focus the input field
+    document.getElementById('guess-input').focus();
 }
 
-const gameState = {
-  wordObj: getWordOfTheDay(),
-  currentStep: 0,
-  completed: false
-};
-
-function updateUI() {
-  document.getElementById('word-of-the-day').textContent = gameState.wordObj.word;
-  document.getElementById('progress').textContent = `Step ${gameState.currentStep + 1} of ${gameState.wordObj.etymology.length}`;
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('guess-input').value = '';
-  document.getElementById('guess-input').disabled = false;
-  document.querySelector('#guess-form button').disabled = false;
-  document.getElementById('etymology-descriptions').innerHTML = '';
+// Render the etymology tree using D3
+function renderTree() {
+    const treeContainer = document.getElementById('tree-container');
+    treeContainer.innerHTML = ''; // Clear previous tree
+    
+    // Set dimensions and margins
+    const margin = {top: 20, right: 90, bottom: 30, left: 90};
+    const width = treeContainer.clientWidth - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+    
+    // Create the tree layout
+    const treeLayout = d3.tree().size([height, width]);
+    const root = d3.hierarchy(treeData);
+    treeLayout(root);
+    
+    // Create SVG
+    const svg = d3.select(treeContainer)
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+    
+    // Create tooltip div
+    const tooltip = d3.select('body').append('div')
+        .attr('class', 'tooltip')
+        .style('opacity', 0);
+    
+    // Draw links
+    svg.selectAll('.link')
+        .data(root.links())
+        .enter()
+        .append('path')
+        .attr('class', 'link')
+        .attr('fill', 'none')
+        .attr('stroke', '#555')
+        .attr('stroke-width', 1.5)
+        .attr('d', d3.linkHorizontal()
+            .x(d => d.y)
+            .y(d => d.x));
+    
+    // Draw nodes
+    const node = svg.selectAll('.node')
+        .data(root.descendants())
+        .enter()
+        .append('g')
+        .attr('class', 'node')
+        .attr('transform', d => `translate(${d.y},${d.x})`);
+    
+    // Add circles to nodes
+    node.append('circle')
+        .attr('r', 5)
+        .attr('fill', d => d.data.lang === 'en' && !guessedWords.has(d.data.word) ? '#333' : '#fff');
+    
+    // Add text labels
+    node.append('text')
+        .attr('dy', '.31em')
+        .attr('x', d => d.children ? -9 : 9)
+        .attr('text-anchor', d => d.children ? 'end' : 'start')
+        .attr('fill', d => d.data.lang === 'en' && !guessedWords.has(d.data.word) ? '#666' : '#fff')
+        .text(d => {
+            if (d.data.lang === 'en' && !guessedWords.has(d.data.word)) {
+                return '???';
+            }
+            return d.data.word;
+        })
+        .on('mouseover', function(event, d) {
+            if (d.data.gloss) {
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', .9);
+                tooltip.html(d.data.gloss)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 28) + 'px');
+            }
+        })
+        .on('mouseout', function(d) {
+            tooltip.transition()
+                .duration(500)
+                .style('opacity', 0);
+        });
+    
+    // Add gloss text
+    node.append('text')
+        .attr('dy', '1.5em')
+        .attr('x', d => d.children ? -9 : 9)
+        .attr('text-anchor', d => d.children ? 'end' : 'start')
+        .attr('fill', '#888')
 }
 
-function showWin() {
-  document.getElementById('feedback').textContent = '🎉 Correct! You traced the word to its origin!';
-  document.getElementById('guess-input').disabled = true;
-  document.querySelector('#guess-form button').disabled = true;
-}
-
-// Add a new div for etymology descriptions if not present
-if (!document.getElementById('etymology-descriptions')) {
-  const descDiv = document.createElement('div');
-  descDiv.id = 'etymology-descriptions';
-  descDiv.style.margin = '1em 0';
-  document.getElementById('game-container').appendChild(descDiv);
-}
-
-document.getElementById('guess-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  if (gameState.completed) return;
-  const guess = document.getElementById('guess-input').value.trim().toLowerCase();
-  const correct = gameState.wordObj.etymology[gameState.currentStep].toLowerCase();
-  if (guess === correct) {
-    gameState.currentStep++;
-    // Show etymology description if available
-    const descArr = gameState.wordObj.descriptions;
-    if (descArr && descArr[gameState.currentStep - 1]) {
-      const descDiv = document.getElementById('etymology-descriptions');
-      const p = document.createElement('p');
-      p.textContent = descArr[gameState.currentStep - 1];
-      descDiv.appendChild(p);
-    }
-    document.getElementById('feedback').textContent = '✅ Correct!';
-    if (gameState.currentStep === gameState.wordObj.etymology.length) {
-      gameState.completed = true;
-      showWin();
+// Handle word guesses
+function handleGuess() {
+    const guessInput = document.getElementById('guess-input');
+    const guess = guessInput.value.toLowerCase().trim();
+    
+    if (!guess) return;
+    
+    const feedback = document.getElementById('feedback');
+    
+    if (guessedWords.has(guess)) {
+        feedback.textContent = 'You already guessed that word!';
+        feedback.className = 'incorrect';
+    } else if (GAME_DATA.words[currentWord].related_words.includes(guess)) {
+        guessedWords.add(guess);
+        feedback.textContent = 'Correct!';
+        feedback.className = 'correct';
+        renderTree();
     } else {
-      // Don't clear descriptions, just clear input and feedback after a short delay
-      setTimeout(() => {
-        document.getElementById('feedback').textContent = '';
-        document.getElementById('guess-input').value = '';
-        document.getElementById('guess-input').focus();
-      }, 1200);
+        feedback.textContent = 'Incorrect. Try again!';
+        feedback.className = 'incorrect';
     }
-  } else {
-    document.getElementById('feedback').textContent = '❌ Try again.';
-    const container = document.getElementById('game-container');
-    container.classList.remove('shake');
-    void container.offsetWidth;
-    container.classList.add('shake');
-    setTimeout(() => container.classList.remove('shake'), 400);
-  }
+    
+    guessInput.value = '';
+    guessInput.focus();
+}
+
+// Event listeners
+document.getElementById('guess-button').addEventListener('click', handleGuess);
+document.getElementById('guess-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        handleGuess();
+    }
 });
 
-// Initialize UI on page load
-document.addEventListener('DOMContentLoaded', updateUI);
+// Initialize the game when the page loads
+document.addEventListener('DOMContentLoaded', initGame); 

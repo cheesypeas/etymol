@@ -1,147 +1,107 @@
-body {
-  background: #f9f9f9;
-  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --accent-color: #4a9eff;
+    --error-color: #ff4a4a;
+    --success-color: #4aff4a;
 }
 
-#game-container {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-  padding: 2.5rem 2rem 2rem 2rem;
-  min-width: 320px;
-  max-width: 90vw;
-  text-align: center;
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 h1 {
-  font-size: 1.7rem;
-  margin-bottom: 1.2rem;
-  color: #333;
+    margin-bottom: 20px;
 }
 
-#word-of-the-day {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 1.2rem;
-  color: #2a5d8f;
+#clue-word {
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
-#guess-form {
-  margin-bottom: 1.2rem;
+#tree-container {
+    margin: 20px 0;
+    min-height: 500px;
+    width: 100%;
+    overflow: visible;
 }
 
-#guess-input {
-  padding: 0.5rem 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  outline: none;
-  margin-right: 0.5rem;
-  transition: border 0.2s;
-}
-#guess-input:focus {
-  border-color: #2a5d8f;
+.input-container {
+    margin: 20px 0;
 }
 
-#guess-form button {
-  padding: 0.5rem 1.1rem;
-  font-size: 1rem;
-  background: #2a5d8f;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+    background-color: #333;
+    color: var(--text-color);
 }
-#guess-form button:disabled {
-  background: #bbb;
-  cursor: not-allowed;
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
 }
-#guess-form button:hover:not(:disabled) {
-  background: #17406a;
+
+button:hover {
+    background-color: #3a8eff;
 }
 
 #feedback {
-  min-height: 1.5em;
-  margin-bottom: 0.7em;
-  font-size: 1.1em;
-  font-weight: 500;
-}
-#feedback:empty {
-  min-height: 0;
-}
-#feedback {
-  color: #d9534f;
-}
-#feedback:contains('Correct') {
-  color: #28a745;
+    margin-top: 20px;
+    font-size: 18px;
 }
 
-#progress {
-  color: #888;
-  font-size: 0.98em;
+.correct {
+    color: var(--success-color);
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-10px); }
-  40% { transform: translateX(10px); }
-  60% { transform: translateX(-10px); }
-  80% { transform: translateX(10px); }
-  100% { transform: translateX(0); }
+.incorrect {
+    color: var(--error-color);
 }
 
-.shake {
-  animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+.link {
+    fill: none;
+    stroke: #555;
+    stroke-width: 1.5px;
 }
 
-#root-word-container {
-  font-size: 1.2rem;
-  margin-bottom: 1.1rem;
-  color: #2a5d8f;
-  font-weight: 500;
+.node circle {
+    stroke: #555;
+    stroke-width: 1.5px;
 }
 
-#root-word {
-  font-weight: 700;
-  color: #17406a;
+.node text {
+    font-size: 12px;
+    font-family: sans-serif;
 }
 
-#guessed-words {
-  list-style: none;
-  padding: 0;
-  margin: 1.2rem 0 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-#guessed-words li {
-  background: #e3f0fa;
-  color: #17406a;
-  padding: 0.3rem 0.7rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  margin: 0;
-}
-
-#reveal-btn {
-  margin-top: 1.2rem;
-  padding: 0.5rem 1.1rem;
-  font-size: 1rem;
-  background: #bbb;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-#reveal-btn:hover {
-  background: #888;
-}
+.tooltip {
+    position: absolute;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+    max-width: 200px;
+    text-align: center;
+} 
