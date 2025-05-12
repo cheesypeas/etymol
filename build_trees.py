@@ -82,8 +82,8 @@ class EtymologyDB:
                 neg_idx, *parents = map(int, line.strip().split('\t'))
                 self.multi_parents[neg_idx] = parents
 
-    def build_tree(self, start_idx: int, visited: Optional[Set[int]] = None) -> Optional[Tree]:
-        """Build a tree starting from any word index."""
+    def build_tree(self, start_idx: int, visited: Optional[Set[int]] = None, seen_english: Optional[Set[str]] = None) -> Optional[Tree]:
+        """Build a tree starting from any word index, including more relationship types."""
         if visited is None:
             visited = set()
         if seen_english is None:
@@ -100,16 +100,20 @@ class EtymologyDB:
         # Get word data
         lang, word, gloss = self.word_data[start_idx]
         
-        # Prune duplicate English leaves globally per tree
+        # Prune duplicate English leaves globally per tree and filter rare words
         if lang == 'en':
             if word in seen_english:
+                return None
+            # Skip very rare English words (frequency < 0.0001)
+            if self.word_frequencies.get(word.lower(), 0) < 0.0001:
                 return None
             seen_english.add(word)
         
         # Build children
         children = []
         for child_idx, rel_type in self.child_relationships[start_idx]:
-            if rel_type == 'inh':  # inheritance relationship
+            # Include more relationship types
+            if rel_type in ['inh', 'der', 'der(s)', 'der(p)', 'bor', 'cog', 'cmpd+bor']:  # Include cognates and compounds
                 child_tree = self.build_tree(child_idx, set(visited), seen_english)
                 if child_tree:
                     children.append(child_tree)
@@ -168,7 +172,7 @@ class EtymologyDB:
             return 0.0, False
         if is_linear:
             return 0.0, False
-        if branch_points < 1:  # Allow trees with just 1 branch point
+        if branch_points < 2:  # Require at least 2 branch points
             return 0.0, False
         if english_count < 2:
             return 0.0, False
