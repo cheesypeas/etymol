@@ -268,6 +268,74 @@ class EtymologyDB:
         
         return interesting_trees
 
+    def build_unfiltered_tree(self, start_idx: int, visited: Optional[Set[int]] = None) -> Optional[Tree]:
+        """Build a tree without any filtering or pruning."""
+        if visited is None:
+            visited = set()
+        
+        if start_idx in visited:
+            return None  # Prevent cycles
+        
+        if start_idx not in self.word_data:
+            return None
+        
+        visited.add(start_idx)
+        
+        # Get word data
+        lang, word, gloss = self.word_data[start_idx]
+        
+        # Build children without filtering
+        children = []
+        for child_idx, rel_type in self.child_relationships[start_idx]:
+            child_tree = self.build_unfiltered_tree(child_idx, set(visited))
+            if child_tree:
+                children.append(child_tree)
+        
+        # Create the tree
+        return {
+            'word': word,
+            'anglicized': anglicize_word(word) if lang != 'en' else word,
+            'lang': lang,
+            'gloss': gloss,
+            'children': children
+        }
+
+    def find_all_trees(self) -> List[Tuple[str, Tree, Tree, float]]:
+        """Find all trees, both filtered and unfiltered."""
+        all_trees = []
+        total_trees = 0
+        rejected_trees = 0
+        rejection_reasons = defaultdict(int)
+        
+        for idx, (lang, word, _) in self.word_data.items():
+            unfiltered_tree = self.build_unfiltered_tree(idx)
+            if unfiltered_tree:
+                total_trees += 1
+                filtered_tree = self.build_tree(idx)
+                if filtered_tree:
+                    score, is_valid = self.score_tree(filtered_tree)
+                    if is_valid:
+                        all_trees.append((word, unfiltered_tree, filtered_tree, score))
+                    else:
+                        rejected_trees += 1
+                        rejection_reasons['invalid'] += 1
+                else:
+                    rejected_trees += 1
+                    rejection_reasons['filtered_out'] += 1
+        
+        # Sort by score
+        all_trees.sort(key=lambda x: x[3], reverse=True)
+        
+        print(f"\nTree Statistics:")
+        print(f"Total trees built: {total_trees}")
+        print(f"Rejected trees: {rejected_trees}")
+        print(f"Accepted trees: {len(all_trees)}")
+        print("\nRejection reasons:")
+        for reason, count in rejection_reasons.items():
+            print(f"  {reason}: {count}")
+        
+        return all_trees
+
 def collect_english_words(tree: Tree) -> Set[str]:
     """Collect all English words from a tree."""
     english_words = set()
@@ -320,15 +388,45 @@ def output_game_data(trees: List[Tuple[str, Tree, float]], word_frequencies: Dic
     
     return game_data
 
+def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_frequencies: Dict[str, float]) -> Dict:
+    """Convert trees to explorer data format with both filtered and unfiltered versions."""
+    explorer_data = {
+        "words": {},
+        "word_list": []
+    }
+    
+    for word, unfiltered_tree, filtered_tree, score in trees:
+        english_words = collect_english_words(filtered_tree)
+        if not english_words:  # Skip trees with no English words
+            continue
+            
+        # Get the most common English word
+        clue_word = get_most_common_english_word(filtered_tree, word_frequencies)
+        
+        # Add to explorer data using the English word as the key
+        explorer_data["words"][clue_word] = {
+            "unfiltered_tree": unfiltered_tree,
+            "filtered_tree": filtered_tree,
+            "related_words": sorted(list(english_words)),  # Sort for consistency
+            "score": score
+        }
+        explorer_data["word_list"].append(clue_word)
+    
+    # Sort word list for consistency
+    explorer_data["word_list"].sort()
+    
+    return explorer_data
+
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Build etymology trees for the game.')
     parser.add_argument('--random', action='store_true', help='Print a random clue word for testing')
+    parser.add_argument('--explorer', action='store_true', help='Generate explorer data with unfiltered trees')
     args = parser.parse_args()
 
     # Clear old data files
     print("Clearing old data files...")
-    for file in ['game_data.js', 'word_frequencies.txt']:
+    for file in ['game_data.js', 'explorer_data.js', 'word_frequencies.txt']:
         try:
             os.remove(file)
             print(f"Removed {file}")
@@ -338,27 +436,50 @@ def main():
     db = EtymologyDB()
     print("Loading data...")
     db.load_data()
-    print("Finding interesting trees...")
-    trees = db.find_interesting_trees()
     
-    # Generate game data
-    print("\nGenerating game data...")
-    game_data = output_game_data(trees, db.word_frequencies)
-    
-    # Save to file
-    print("Saving to game_data.js...")
-    with open('game_data.js', 'w') as f:
-        f.write('const GAME_DATA = ')
-        json.dump(game_data, f, indent=2)
-        f.write(';')
+    if args.explorer:
+        print("Finding all trees (filtered and unfiltered)...")
+        trees = db.find_all_trees()
+        
+        # Generate explorer data
+        print("\nGenerating explorer data...")
+        explorer_data = output_explorer_data(trees, db.word_frequencies)
+        
+        # Save to file
+        print("Saving to explorer_data.js...")
+        with open('explorer_data.js', 'w') as f:
+            f.write('const EXPLORER_DATA = ')
+            json.dump(explorer_data, f, indent=2)
+            f.write(';')
+    else:
+        print("Finding interesting trees...")
+        trees = db.find_interesting_trees()
+        
+        # Generate game data
+        print("\nGenerating game data...")
+        game_data = output_game_data(trees, db.word_frequencies)
+        
+        # Save to file
+        print("Saving to game_data.js...")
+        with open('game_data.js', 'w') as f:
+            f.write('const GAME_DATA = ')
+            json.dump(game_data, f, indent=2)
+            f.write(';')
     
     # If --random flag is set, print a random clue word
     if args.random:
-        random_word = random.choice(list(game_data["words"].keys()))
+        data = explorer_data if args.explorer else game_data
+        random_word = random.choice(list(data["words"].keys()))
         print(f"\nRandom clue word for testing: {random_word}")
-        print("\nTree structure:")
-        print_tree(game_data["words"][random_word]["tree"])
-        print("\nRelated words:", game_data["words"][random_word]["related_words"])
+        if args.explorer:
+            print("\nUnfiltered tree structure:")
+            print_tree(data["words"][random_word]["unfiltered_tree"])
+            print("\nFiltered tree structure:")
+            print_tree(data["words"][random_word]["filtered_tree"])
+        else:
+            print("\nTree structure:")
+            print_tree(data["words"][random_word]["tree"])
+        print("\nRelated words:", data["words"][random_word]["related_words"])
     
     print("Done!")
 
