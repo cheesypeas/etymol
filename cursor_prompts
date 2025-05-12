@@ -18,6 +18,20 @@ Etymol is an etymology-based daily word game.
    - JS, CSS, HTML
    - No react
    - D3.js for tree visualization
+   - EtymDB for source data, laid out so:
+   
+
+data
+
+    etymdb.csv is the raw extracted DB csv file
+        Extracted from wiktionary.xml, itself extracted from enwiktionary-latest-pages-articles.xml - neither have been added to the repo because of their size, if you need them, please contact the repo owner
+    split_etymdb contains the extracted database, separated in several files for easier data analysis
+        etymdb_values: Word ix, Lang identifier (in wiki code), Lexeme, Gloss (English translation)
+        etymdb_links_info: Direct relation type, child word ix, parent word ix
+            If the parent index is negative (usually for derivation or compounding relations), it means that several parents are implied: the negative index will be found in etymdb_links_index, in association with the several parents indices
+        etymdb_links_index: Multiple parents relation ix, parent 1 ix, parent 2 ix, ... parent n ix
+
+
 
 2. Tree Generation:
    - Minimum 5 nodes per tree
