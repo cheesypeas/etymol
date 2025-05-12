@@ -41,7 +41,7 @@ def load_word_frequencies() -> Dict[str, float]:
         download_word_frequencies()
         return load_word_frequencies()
 
-def load_scrabble_words() -> Set[str]:
+def load_valid_words() -> Set[str]:
     """Load words from system word list."""
     words = set()
     try:
@@ -83,7 +83,7 @@ class EtymologyDB:
         self.multi_parents: MultiParents = {}
         self.child_relationships: Relationships = defaultdict(list)  # parent_idx -> [(child_idx, rel_type), ...]
         self.word_frequencies = load_word_frequencies()
-        self.valid_words = load_scrabble_words()  # Renamed from scrabble_words to valid_words
+        self.valid_words = load_valid_words()  # Updated function name
         
     def load_data(self):
         """Load all data from the split etymdb files."""
