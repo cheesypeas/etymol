@@ -117,9 +117,10 @@ class EtymologyDB:
     def is_valid_english_word(self, word: str) -> bool:
         """Check if a word is a valid English word using system word list and frequency."""
         word_lower = word.lower()
-        # Must be in system word list and have reasonable frequency
+        # Must be in system word list, have reasonable frequency, and not be capitalized
         return (word_lower in self.valid_words and 
-                self.word_frequencies.get(word_lower, 0) >= 0.0001)
+                self.word_frequencies.get(word_lower, 0) >= 0.0001 and
+                word == word_lower)  # Reject capitalized words
 
     def build_tree(self, start_idx: int, visited: Optional[Set[int]] = None, seen_english: Optional[Set[str]] = None) -> Optional[Tree]:
         """Build a tree starting from any word index, including more relationship types."""
@@ -141,12 +142,13 @@ class EtymologyDB:
         
         # Prune duplicate English leaves globally per tree and filter invalid words
         if lang == 'en':
-            if word in seen_english:
+            word_lower = word.lower()
+            if word_lower in seen_english:  # Case-insensitive duplicate check
                 return None
-            # Skip words not in system word list or with low frequency
+            # Skip words not in system word list, with low frequency, or capitalized
             if not self.is_valid_english_word(word):
                 return None
-            seen_english.add(word)
+            seen_english.add(word_lower)  # Store lowercase version
         
         # Build children
         children = []
