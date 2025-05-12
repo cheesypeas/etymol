@@ -3,6 +3,7 @@ let currentWord;
 let guessedWords = new Set();
 let treeData;
 let allWordsRevealed = false;
+let tooltip;
 
 // Get a random word from the word list
 function getRandomWord() {
@@ -30,6 +31,11 @@ function initGame() {
     
     // Display the clue word
     document.getElementById('clue-word').textContent = currentWord;
+    
+    // Create tooltip div (only once)
+    tooltip = d3.select('body').append('div')
+        .attr('class', 'tooltip')
+        .style('opacity', 0);
     
     // Render the initial tree (with English words redacted, except clue word)
     renderTree();
