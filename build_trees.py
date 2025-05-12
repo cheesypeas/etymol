@@ -85,6 +85,38 @@ class EtymologyDB:
         self.word_frequencies = load_word_frequencies()
         self.valid_words = load_valid_words()  # Updated function name
         
+    def get_relationship_direction(self, rel_type: str, child_idx: int, parent_idx: int) -> Tuple[int, int]:
+        """Determine the correct direction of a relationship."""
+        if rel_type in ['inh', 'der', 'der(s)', 'der(p)', 'bor', 'cmpd+bor']:
+            return parent_idx, child_idx  # parent → child
+        elif rel_type == 'cog':
+            return child_idx, parent_idx  # bidirectional
+        else:
+            return child_idx, parent_idx  # default direction
+
+    def resolve_multiple_parents(self, child_idx: int, parent_idx: int) -> List[int]:
+        """Resolve cases where a word has multiple parents."""
+        if parent_idx < 0 and parent_idx in self.multi_parents:
+            return self.multi_parents[parent_idx]
+        return [parent_idx]
+
+    def validate_word_data(self, idx: int, lang: str, word: str, gloss: str) -> bool:
+        """Validate word data before adding to database."""
+        if not lang or not word:
+            return False
+        if not isinstance(idx, int) or idx < 0:
+            return False
+        return True
+
+    def validate_relationship(self, rel_type: str, child_idx: int, parent_idx: int) -> bool:
+        """Validate relationship data before adding to database."""
+        valid_types = {'inh', 'der', 'der(s)', 'der(p)', 'bor', 'cog', 'cmpd+bor'}
+        if rel_type not in valid_types:
+            return False
+        if not isinstance(child_idx, int) or not isinstance(parent_idx, int):
+            return False
+        return True
+
     def load_data(self):
         """Load all data from the split etymdb files."""
         # Load word data
@@ -93,26 +125,53 @@ class EtymologyDB:
                 parts = line.strip().split('\t')
                 if len(parts) != 5:  # Skip malformed lines
                     continue
-                idx = int(parts[0])
-                lang = parts[1]
-                word = parts[3]
-                gloss = parts[4]
-                self.word_data[idx] = (lang, word, gloss)
+                try:
+                    idx = int(parts[0])
+                    lang = parts[1]
+                    word = parts[3]
+                    gloss = parts[4]
+                    if self.validate_word_data(idx, lang, word, gloss):
+                        self.word_data[idx] = (lang, word, gloss)
+                except (ValueError, IndexError):
+                    continue
         
         # Load direct relationships
         with open('data/split_etymdb/etymdb_links_info.csv') as f:
             for line in f:
-                rel_type, child_idx, parent_idx = line.strip().split('\t')
-                child_idx = int(child_idx)
-                parent_idx = int(parent_idx)
-                self.relationships[child_idx].append((parent_idx, rel_type))
-                self.child_relationships[parent_idx].append((child_idx, rel_type))
+                try:
+                    rel_type, child_idx, parent_idx = line.strip().split('\t')
+                    child_idx = int(child_idx)
+                    parent_idx = int(parent_idx)
+                    
+                    if not self.validate_relationship(rel_type, child_idx, parent_idx):
+                        continue
+                    
+                    # Handle multiple parents
+                    parent_indices = self.resolve_multiple_parents(child_idx, parent_idx)
+                    
+                    for parent_idx in parent_indices:
+                        # Determine correct relationship direction
+                        source_idx, target_idx = self.get_relationship_direction(rel_type, child_idx, parent_idx)
+                        
+                        # Add relationship in both directions for easier traversal
+                        self.relationships[target_idx].append((source_idx, rel_type))
+                        self.child_relationships[source_idx].append((target_idx, rel_type))
+                except (ValueError, IndexError):
+                    continue
         
         # Load multiple parent cases
         with open('data/split_etymdb/etymdb_links_index.csv') as f:
             for line in f:
-                neg_idx, *parents = map(int, line.strip().split('\t'))
-                self.multi_parents[neg_idx] = parents
+                try:
+                    parts = line.strip().split('\t')
+                    if len(parts) < 2:  # Need at least neg_idx and one parent
+                        continue
+                    neg_idx = int(parts[0])
+                    parents = [int(p) for p in parts[1:]]
+                    if all(p in self.word_data for p in parents):  # Only add if all parents exist
+                        self.multi_parents[neg_idx] = parents
+                except (ValueError, IndexError):
+                    continue
 
     def is_valid_english_word(self, word: str) -> bool:
         """Check if a word is a valid English word using system word list and frequency."""
@@ -154,10 +213,13 @@ class EtymologyDB:
         children = []
         for child_idx, rel_type in self.child_relationships[start_idx]:
             # Include more relationship types
-            if rel_type in ['inh', 'der', 'der(s)', 'der(p)', 'bor', 'cog', 'cmpd+bor']:  # Include cognates and compounds
-                child_tree = self.build_tree(child_idx, set(visited), seen_english)
-                if child_tree:
-                    children.append(child_tree)
+            if rel_type in ['inh', 'der', 'der(s)', 'der(p)', 'bor', 'cmpd+bor']:  # Include compounds but not cognates
+                # For all relationships, only follow the correct direction
+                source_idx, target_idx = self.get_relationship_direction(rel_type, child_idx, start_idx)
+                if target_idx == child_idx:  # Only follow if we're going in the right direction
+                    child_tree = self.build_tree(child_idx, set(visited), seen_english)
+                    if child_tree:
+                        children.append(child_tree)
         
         # If this is not an English word and has no children that lead to English words, prune it
         if lang != 'en' and not children:

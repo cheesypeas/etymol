@@ -1,10 +1,31 @@
-#!/usr/bin/env python3
+"""
+Etymology Explorer Tool
+----------------------
+
+This tool loads etymological data from the split_etymdb dataset and allows programmatic exploration of word relationships.
+
+Data format:
+- etymdb_values.csv: index, language, _, term, gloss
+- etymdb_links_info.csv: relationship_type, source_index, target_index
+
+Purpose:
+- To provide a programmatic interface for querying etymological relationships between words, suitable for use by AI agents or scripts.
+- Returns structured data for easy downstream processing.
+
+Usage:
+    python explore_etymology.py --term <word> [--language <lang>]
+
+Example:
+    python explore_etymology.py --term book --language en
+"""
 
 import csv
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
 from collections import defaultdict
+import argparse
+import json
 
 @dataclass
 class Word:
@@ -28,7 +49,6 @@ class EtymologyExplorer:
         
     def load_data(self):
         """Load all necessary data files."""
-        print("Loading word data...")
         with open(self.data_dir / "etymdb_values.csv", 'r', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter='\t')
             for row in reader:
@@ -43,7 +63,6 @@ class EtymologyExplorer:
                     self.words[index] = word
                     self.term_to_indices[(row[1], row[3])].append(index)
 
-        print("Loading relationship data...")
         with open(self.data_dir / "etymdb_links_info.csv", 'r', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter='\t')
             for row in reader:
@@ -72,67 +91,60 @@ class EtymologyExplorer:
             if rel.source.index == word.index or rel.target.index == word.index
         ]
 
-    def explore_word(self, term: str, language: str = "en"):
-        """Explore relationships for a given word."""
+    def explore_word(self, term: str, language: str = "en") -> List[Dict[str, Any]]:
+        """Return all relationships for a given word as structured data."""
         words = self.find_words(term, language)
         if not words:
-            print(f"Word '{term}' not found in language '{language}'")
-            return
+            return []
 
-        if len(words) > 1:
-            print(f"\nFound {len(words)} entries for '{term}' in {language}:")
-            for i, word in enumerate(words, 1):
-                print(f"\n{i}. {word.term} ({word.language})")
-                print(f"   Index: {word.index}")
-                if word.gloss:
-                    print(f"   Gloss: {word.gloss}")
-            
-            while True:
-                try:
-                    choice = int(input("\nEnter the number of the entry to explore (or 0 to quit): "))
-                    if choice == 0:
-                        return
-                    if 1 <= choice <= len(words):
-                        word = words[choice - 1]
-                        break
-                    print("Invalid choice. Please try again.")
-                except ValueError:
-                    print("Please enter a number.")
-        else:
-            word = words[0]
-
-        print(f"\nExploring relationships for: {word.term} ({word.language})")
-        print(f"Index: {word.index}")
-        if word.gloss:
-            print(f"Gloss: {word.gloss}")
-
-        # Group relationships by type
-        rels_by_type = defaultdict(list)
-        for rel in self.get_relationships(word):
-            rels_by_type[rel.type].append(rel)
-
-        # Print relationships
-        for rel_type, rels in rels_by_type.items():
-            print(f"\n{rel_type.upper()} relationships:")
-            for rel in rels:
-                if rel.source.index == word.index:
-                    other = rel.target
-                else:
-                    other = rel.source
-                print(f"  - {other.term} ({other.language})" + 
-                      (f" - {other.gloss}" if other.gloss else ""))
+        results = []
+        for word in words:
+            rels_by_type = defaultdict(list)
+            for rel in self.get_relationships(word):
+                rels_by_type[rel.type].append(rel)
+            word_info = {
+                "term": word.term,
+                "language": word.language,
+                "index": word.index,
+                "gloss": word.gloss,
+                "relationships": {}
+            }
+            for rel_type, rels in rels_by_type.items():
+                word_info["relationships"][rel_type] = [
+                    {
+                        "other_term": (rel.target.term if rel.source.index == word.index else rel.source.term),
+                        "other_language": (rel.target.language if rel.source.index == word.index else rel.source.language),
+                        "other_index": (rel.target.index if rel.source.index == word.index else rel.source.index),
+                        "other_gloss": (rel.target.gloss if rel.source.index == word.index else rel.source.gloss)
+                    }
+                    for rel in rels
+                ]
+            results.append(word_info)
+        return results
 
 def main():
+    parser = argparse.ArgumentParser(description="Explore etymological relationships for a word.")
+    parser.add_argument('--term', type=str, required=True, help='Word to explore')
+    parser.add_argument('--language', type=str, default='en', help='Language code (default: en)')
+    parser.add_argument('--json', action='store_true', help='Output as JSON')
+    args = parser.parse_args()
+
     explorer = EtymologyExplorer()
     explorer.load_data()
-    
-    while True:
-        term = input("\nEnter a word to explore (or 'q' to quit): ").strip()
-        if term.lower() == 'q':
-            break
-            
-        language = input("Enter language code (default: en): ").strip() or "en"
-        explorer.explore_word(term, language)
+    results = explorer.explore_word(args.term, args.language)
+
+    if args.json:
+        print(json.dumps(results, indent=2, ensure_ascii=False))
+    else:
+        if not results:
+            print(f"No entries found for '{args.term}' in language '{args.language}'")
+            return
+        for word_info in results:
+            print(f"\n{word_info['term']} ({word_info['language']}) [Index: {word_info['index']}] - {word_info['gloss']}")
+            for rel_type, rels in word_info['relationships'].items():
+                print(f"  {rel_type.upper()} relationships:")
+                for rel in rels:
+                    print(f"    - {rel['other_term']} ({rel['other_language']}) [Index: {rel['other_index']}] - {rel['other_gloss']}")
 
 if __name__ == "__main__":
     main() 
