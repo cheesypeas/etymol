@@ -1,0 +1,42 @@
+# Etymol Game Development
+
+## Current State
+- Web-based etymology tree guessing game
+- D3.js visualization of word trees
+- English words highlighted in gold (both revealed and redacted)
+- Glosses shown as text labels below words
+- Reveal All button for giving up
+- Clean, dark theme UI
+
+## Key Design Decisions
+1. Tree Generation:
+   - Minimum 5 nodes per tree
+   - At least 4 English words required
+   - At least 1 branching point
+   - Prefer trees with multiple branches
+   - Score based on language variety and tree complexity
+
+2. UI/UX:
+   - Dark theme for better readability
+   - Gold highlighting for English words (both revealed and redacted)
+   - Glosses shown as text labels (not tooltips)
+   - Reveal All button in red to indicate give-up action
+   - Feedback messages for correct/incorrect guesses
+
+3. Game Logic:
+   - Words revealed when guessed or when all children are revealed
+   - English words are the target words to guess
+   - Clue word is pre-revealed
+   - Related words list for validation
+
+## Development Notes
+- Keep game_data.js in git (generated data)
+- Exclude word_frequencies.txt (downloaded data)
+- Maintain clean, semantic git commits
+- Focus on intuitive UI without explanatory text
+
+## Next Steps
+- Consider adding difficulty levels
+- Maybe add hints system
+- Could add statistics tracking
+- Might add more visual polish
