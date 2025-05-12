@@ -1,5 +1,26 @@
-# Node.js dependencies
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated data
+word_frequencies.txt
+word_frequencies.json
+game-data.js
+
+# Raw data
+data/
+
+# Development
+cursor_prompts/
+.vscode/
+.idea/
 
 # Production build (optional, if you don't want to track dist in git)
 dist/
