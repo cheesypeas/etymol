@@ -56,12 +56,29 @@ function shouldRevealNode(node) {
         return true;
     }
     
-    // For non-guessed words, check if all children are revealed
+    // For non-English words, reveal if any child is revealed
+    if (node.data.lang !== 'en' && node.children) {
+        return node.children.some(child => shouldRevealNode(child));
+    }
+    
+    // For English words, only reveal if all children are revealed
     if (node.children) {
         return node.children.every(child => shouldRevealNode(child));
     }
     
     return false;
+}
+
+// Convert non-English words to anglicized form
+function anglicizeWord(word) {
+    return word
+        .toLowerCase()
+        .normalize('NFD')  // Decompose characters with diacritics
+        .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
+        .replace(/[^a-z]/g, '')  // Remove non-letters
+        .replace(/[æ]/g, 'ae')  // Common ligatures
+        .replace(/[œ]/g, 'oe')
+        .replace(/[ß]/g, 'ss');
 }
 
 // Render the etymology tree using D3
@@ -138,6 +155,10 @@ function renderTree() {
         .text(d => {
             if (!shouldRevealNode(d)) {
                 return '???';
+            }
+            // Use anglicized form for non-English words
+            if (d.data.lang !== 'en') {
+                return d.data.anglicized;
             }
             return d.data.word;
         });
