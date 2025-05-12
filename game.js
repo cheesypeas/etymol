@@ -35,7 +35,14 @@ function initGame() {
     // Create tooltip div (only once)
     tooltip = d3.select('body').append('div')
         .attr('class', 'tooltip')
-        .style('opacity', 0);
+        .style('opacity', 0)
+        .style('position', 'fixed')
+        .style('background-color', 'rgba(0, 0, 0, 0.8)')
+        .style('color', 'white')
+        .style('padding', '8px')
+        .style('border-radius', '4px')
+        .style('pointer-events', 'none')
+        .style('z-index', '1000');
     
     // Render the initial tree (with English words redacted, except clue word)
     renderTree();
@@ -161,17 +168,23 @@ function renderTree() {
                 return d.data.anglicized;
             }
             return d.data.word;
+        })
+        // Add tooltip behavior
+        .on('mouseover', function(event, d) {
+            if (shouldRevealNode(d) && d.data.gloss) {
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', .9);
+                tooltip.html(d.data.gloss)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 28) + 'px');
+            }
+        })
+        .on('mouseout', function() {
+            tooltip.transition()
+                .duration(500)
+                .style('opacity', 0);
         });
-    
-    // Add gloss labels where they differ from the word
-    node.filter(d => shouldRevealNode(d) && d.data.gloss && d.data.gloss !== d.data.word)
-        .append('text')
-        .attr('dy', '3em')
-        .attr('x', d => d.children ? -9 : 9)
-        .attr('text-anchor', d => d.children ? 'end' : 'start')
-        .attr('fill', '#888')
-        .style('font-size', '0.8em')
-        .text(d => d.data.gloss);
 }
 
 // Handle word guesses
