@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etymol Explorer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .explorer-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .search-container input {
+            width: 300px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        
+        .search-results {
+            position: absolute;
+            width: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 4px;
+            margin-top: 4px;
+            z-index: 1000;
+        }
+        
+        .search-result-item {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #444;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-item:hover {
+            background: #333;
+        }
+        
+        .trees-container {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        
+        .tree-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tree-panel h2 {
+            margin-bottom: 10px;
+        }
+        
+        .tree-container {
+            flex: 1;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 10px;
+            overflow: auto;
+        }
+        
+        .stats-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background: #222;
+            border-radius: 4px;
+        }
+        
+        .stats-panel h3 {
+            margin-top: 0;
+        }
+        
+        .stats-panel p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="explorer-container">
+        <h1>Etymol Explorer</h1>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for a word...">
+        </div>
+        
+        <div class="trees-container">
+            <div class="tree-panel">
+                <h2>Unfiltered Tree</h2>
+                <div id="unfiltered-tree-container" class="tree-container"></div>
+                <div class="stats-panel">
+                    <h3>Unfiltered Tree Stats</h3>
+                    <p id="unfiltered-stats"></p>
+                </div>
+            </div>
+            
+            <div class="tree-panel">
+                <h2>Filtered Tree</h2>
+                <div id="filtered-tree-container" class="tree-container"></div>
+                <div class="stats-panel">
+                    <h3>Filtered Tree Stats</h3>
+                    <p id="filtered-stats"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="explorer_data.js"></script>
+    <script src="explorer.js"></script>
+</body>
+</html> 

@@ -395,6 +395,9 @@ def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_freque
         "word_list": []
     }
     
+    # Track used clue words to handle duplicates
+    used_clue_words = {}
+    
     for word, unfiltered_tree, filtered_tree, score in trees:
         english_words = collect_english_words(filtered_tree)
         if not english_words:  # Skip trees with no English words
@@ -403,12 +406,20 @@ def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_freque
         # Get the most common English word
         clue_word = get_most_common_english_word(filtered_tree, word_frequencies)
         
+        # Handle duplicate clue words by adding a counter
+        if clue_word in used_clue_words:
+            used_clue_words[clue_word] += 1
+            clue_word = f"{clue_word}_{used_clue_words[clue_word]}"
+        else:
+            used_clue_words[clue_word] = 0
+        
         # Add to explorer data using the English word as the key
         explorer_data["words"][clue_word] = {
             "unfiltered_tree": unfiltered_tree,
             "filtered_tree": filtered_tree,
             "related_words": sorted(list(english_words)),  # Sort for consistency
-            "score": score
+            "score": score,
+            "original_word": word  # Store the original word for reference
         }
         explorer_data["word_list"].append(clue_word)
     
