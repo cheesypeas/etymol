@@ -140,9 +140,9 @@ class EtymologyDB:
         return False
 
     def is_valid_english_word(self, word: str) -> bool:
-        """Check if a word is a valid English word using Scrabble word list and frequency."""
+        """Check if a word is a valid English word using system word list and frequency."""
         word_lower = word.lower()
-        # Must be in Scrabble word list and have reasonable frequency
+        # Must be in system word list and have reasonable frequency
         return (word_lower in self.valid_words and 
                 self.word_frequencies.get(word_lower, 0) >= 0.0001)
 
@@ -168,7 +168,7 @@ class EtymologyDB:
         if lang == 'en':
             if word in seen_english:
                 return None
-            # Skip words not in Scrabble list or with low frequency
+            # Skip words not in system word list or with low frequency
             if not self.is_valid_english_word(word):
                 return None
             seen_english.add(word)
