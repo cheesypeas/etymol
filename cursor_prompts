@@ -17,16 +17,20 @@ Etymol is an etymology-based daily word game.
    - No reliance on a database
    - JS, CSS, HTML
    - No react
+   - D3.js for tree visualization
 
-1. Tree Generation:
+2. Tree Generation:
    - Minimum 5 nodes per tree
    - At least 4 English words required
    - At least 1 branching point
    - Prefer trees with multiple branches
    - Score based on language variety and tree complexity
    - Non-English words stored with both original and anglicized forms
+   - Separate filtered and unfiltered tree generation
+   - Filtered trees optimized for gameplay
+   - Unfiltered trees preserve complete etymology data
 
-2. UI/UX:
+3. UI/UX:
    - Dark theme for better readability
    - Gold highlighting for English words (both revealed and redacted)
    - Glosses shown as text labels (not tooltips)
@@ -34,12 +38,16 @@ Etymol is an etymology-based daily word game.
    - Feedback messages for correct/incorrect guesses
    - Non-English words displayed in anglicized form for readability
    - Tree explorer with search and filtering capabilities
+   - Side-by-side comparison of filtered and unfiltered trees
+   - Clear indication when filtered trees are not available
+   - Modern, responsive design
 
-3. Game Logic:
+4. Game Logic:
    - Words revealed when guessed or when all children are revealed
    - English words are the target words to guess
    - Clue word is pre-revealed
    - Related words list for validation
+   - Score-based tree selection for game puzzles
 
 ## Development Notes
 - Keep game_data.js in git (generated data)
@@ -47,9 +55,15 @@ Etymol is an etymology-based daily word game.
 - Maintain clean, semantic git commits
 - Focus on intuitive UI without explanatory text
 - Store both original and anglicized forms of non-English words for flexibility
+- Use tree explorer for data analysis and puzzle design
+- Generate both filtered and unfiltered trees for development
 
 ## Next Steps
-- A tree explorer to aid development and explore the generated data
-- Work on data generation
-- Add more visual polish
+- Improve tree scoring and filtering criteria
+- Add more visual polish to game interface
+- Enhance tree explorer features
+- Optimize data generation process
+- Add more language variety to puzzles
+- Implement daily puzzle generation
+- Add user statistics and progress tracking
 
