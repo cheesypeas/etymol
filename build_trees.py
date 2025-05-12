@@ -114,31 +114,6 @@ class EtymologyDB:
                 neg_idx, *parents = map(int, line.strip().split('\t'))
                 self.multi_parents[neg_idx] = parents
 
-    def is_proper_noun(self, word: str, gloss: str) -> bool:
-        """Check if a word is likely a proper noun using multiple heuristics."""
-        # Common proper noun indicators in glosses
-        proper_noun_indicators = [
-            'name', 'person', 'place', 'city', 'country', 'river', 'mountain',
-            'god', 'goddess', 'mythological', 'mythical', 'character', 'title',
-            'saint', 'king', 'queen', 'emperor', 'empress', 'prince', 'princess'
-        ]
-        
-        # Check if gloss contains proper noun indicators
-        gloss_lower = gloss.lower()
-        if any(indicator in gloss_lower for indicator in proper_noun_indicators):
-            return True
-            
-        # Check if word is capitalized in frequency data but not common in lowercase
-        word_lower = word.lower()
-        upper_freq = self.word_frequencies.get(word, 0)
-        lower_freq = self.word_frequencies.get(word_lower, 0)
-        
-        # If the capitalized form is much more common than lowercase, it's likely a proper noun
-        if upper_freq > 0 and upper_freq > lower_freq * 10:
-            return True
-            
-        return False
-
     def is_valid_english_word(self, word: str) -> bool:
         """Check if a word is a valid English word using system word list and frequency."""
         word_lower = word.lower()
