@@ -3,10 +3,25 @@ let currentWord;
 let guessedWords = new Set();
 let treeData;
 
+// Get a random word from the word list
+function getRandomWord() {
+    return GAME_DATA.word_list[Math.floor(Math.random() * GAME_DATA.word_list.length)];
+}
+
+// Get word from URL parameters or use random/default
+function getWordFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const word = urlParams.get('word');
+    if (word === 'random') {
+        return getRandomWord();
+    }
+    return word || GAME_DATA.word_list[0];  // Use provided word or default to first word
+}
+
 // Initialize the game
 function initGame() {
-    // Get the daily word (for now, just use the first word in the list)
-    currentWord = GAME_DATA.word_list[0];
+    // Get the word from URL or use default
+    currentWord = getWordFromUrl();
     treeData = GAME_DATA.words[currentWord].tree;
     
     // Add the clue word to guessed words (it's pre-revealed)
