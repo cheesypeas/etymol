@@ -41,6 +41,54 @@ def load_word_frequencies() -> Dict[str, float]:
         download_word_frequencies()
         return load_word_frequencies()
 
+def download_scrabble_words():
+    """Download TWL word list."""
+    url = "https://raw.githubusercontent.com/topics/scrabble-word-list/master/TWL06.txt"
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            with open('scrabble_words.txt', 'w') as f:
+                f.write(response.text)
+            print("Downloaded Scrabble word list")
+            return True
+        else:
+            print(f"Failed to download Scrabble word list: HTTP {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"Failed to download Scrabble word list: {str(e)}")
+        return False
+
+def load_scrabble_words() -> Set[str]:
+    """Load words from system word list."""
+    words = set()
+    try:
+        # Try common system word lists
+        word_lists = [
+            '/usr/share/dict/words',  # Common on Linux
+            '/usr/dict/words',        # Alternative location
+            '/usr/share/dict/american-english',  # Debian/Ubuntu
+            '/usr/share/dict/british-english'    # Debian/Ubuntu
+        ]
+        
+        for word_list in word_lists:
+            try:
+                with open(word_list, 'r') as f:
+                    for line in f:
+                        word = line.strip().lower()
+                        # Only include words that are likely valid English words
+                        if word.isalpha() and len(word) >= 2:
+                            words.add(word)
+                print(f"Loaded {len(words)} words from {word_list}")
+                return words
+            except FileNotFoundError:
+                continue
+        
+        print("No system word list found, using empty set")
+        return set()
+    except Exception as e:
+        print(f"Error loading word list: {str(e)}")
+        return set()
+
 def anglicize_word(word: str) -> str:
     """Convert a word to its anglicized form."""
     return unicodedata.normalize('NFD', word.lower()).encode('ascii', 'ignore').decode('ascii')
@@ -52,6 +100,7 @@ class EtymologyDB:
         self.multi_parents: MultiParents = {}
         self.child_relationships: Relationships = defaultdict(list)  # parent_idx -> [(child_idx, rel_type), ...]
         self.word_frequencies = load_word_frequencies()
+        self.scrabble_words = load_scrabble_words()
         
     def load_data(self):
         """Load all data from the split etymdb files."""
@@ -82,6 +131,38 @@ class EtymologyDB:
                 neg_idx, *parents = map(int, line.strip().split('\t'))
                 self.multi_parents[neg_idx] = parents
 
+    def is_proper_noun(self, word: str, gloss: str) -> bool:
+        """Check if a word is likely a proper noun using multiple heuristics."""
+        # Common proper noun indicators in glosses
+        proper_noun_indicators = [
+            'name', 'person', 'place', 'city', 'country', 'river', 'mountain',
+            'god', 'goddess', 'mythological', 'mythical', 'character', 'title',
+            'saint', 'king', 'queen', 'emperor', 'empress', 'prince', 'princess'
+        ]
+        
+        # Check if gloss contains proper noun indicators
+        gloss_lower = gloss.lower()
+        if any(indicator in gloss_lower for indicator in proper_noun_indicators):
+            return True
+            
+        # Check if word is capitalized in frequency data but not common in lowercase
+        word_lower = word.lower()
+        upper_freq = self.word_frequencies.get(word, 0)
+        lower_freq = self.word_frequencies.get(word_lower, 0)
+        
+        # If the capitalized form is much more common than lowercase, it's likely a proper noun
+        if upper_freq > 0 and upper_freq > lower_freq * 10:
+            return True
+            
+        return False
+
+    def is_valid_english_word(self, word: str) -> bool:
+        """Check if a word is a valid English word using Scrabble word list and frequency."""
+        word_lower = word.lower()
+        # Must be in Scrabble word list and have reasonable frequency
+        return (word_lower in self.scrabble_words and 
+                self.word_frequencies.get(word_lower, 0) >= 0.0001)
+
     def build_tree(self, start_idx: int, visited: Optional[Set[int]] = None, seen_english: Optional[Set[str]] = None) -> Optional[Tree]:
         """Build a tree starting from any word index, including more relationship types."""
         if visited is None:
@@ -100,12 +181,12 @@ class EtymologyDB:
         # Get word data
         lang, word, gloss = self.word_data[start_idx]
         
-        # Prune duplicate English leaves globally per tree and filter rare words
+        # Prune duplicate English leaves globally per tree and filter invalid words
         if lang == 'en':
             if word in seen_english:
                 return None
-            # Skip very rare English words (frequency < 0.0001)
-            if self.word_frequencies.get(word.lower(), 0) < 0.0001:
+            # Skip words not in Scrabble list or with low frequency
+            if not self.is_valid_english_word(word):
                 return None
             seen_english.add(word)
         
