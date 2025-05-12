@@ -4,6 +4,7 @@ import requests
 import random
 import argparse
 import os
+import unicodedata
 from collections import defaultdict
 from typing import Dict, List, Set, Tuple, Optional
 
@@ -39,6 +40,10 @@ def load_word_frequencies() -> Dict[str, float]:
         print("Word frequency file not found, downloading...")
         download_word_frequencies()
         return load_word_frequencies()
+
+def anglicize_word(word: str) -> str:
+    """Convert a word to its anglicized form."""
+    return unicodedata.normalize('NFD', word.lower()).encode('ascii', 'ignore').decode('ascii')
 
 class EtymologyDB:
     def __init__(self):
@@ -103,6 +108,7 @@ class EtymologyDB:
         
         return {
             'word': word,
+            'anglicized': anglicize_word(word) if lang != 'en' else word,
             'lang': lang,
             'gloss': gloss,
             'children': children
