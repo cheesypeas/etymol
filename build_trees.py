@@ -1,4 +1,6 @@
 import csv
+import json
+import requests
 from collections import defaultdict
 from typing import Dict, List, Set, Tuple, Optional
 
@@ -8,12 +10,40 @@ Relationships = Dict[int, List[Tuple[int, str]]]  # child_idx -> [(parent_idx, r
 MultiParents = Dict[int, List[int]]  # neg_idx -> [parent1, parent2, ...]
 Tree = Dict[str, any]  # Our tree structure
 
+def download_word_frequencies():
+    """Download word frequency data from Google Books Ngram dataset."""
+    url = "https://raw.githubusercontent.com/IlyaSemenov/wikipedia-word-frequency/master/results/enwiki-2023-04-13.txt"
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open('word_frequencies.txt', 'w') as f:
+            f.write(response.text)
+        print("Downloaded word frequencies")
+    else:
+        print("Failed to download word frequencies")
+        return None
+
+def load_word_frequencies() -> Dict[str, float]:
+    """Load word frequencies from file."""
+    frequencies = {}
+    try:
+        with open('word_frequencies.txt', 'r') as f:
+            for line in f:
+                word, freq = line.strip().split()
+                frequencies[word.lower()] = float(freq)
+        print(f"Loaded {len(frequencies)} word frequencies")
+        return frequencies
+    except FileNotFoundError:
+        print("Word frequency file not found, downloading...")
+        download_word_frequencies()
+        return load_word_frequencies()
+
 class EtymologyDB:
     def __init__(self):
         self.word_data: Dict[int, WordData] = {}
         self.relationships: Relationships = defaultdict(list)
         self.multi_parents: MultiParents = {}
         self.child_relationships: Relationships = defaultdict(list)  # parent_idx -> [(child_idx, rel_type), ...]
+        self.word_frequencies = load_word_frequencies()
         
     def load_data(self):
         """Load all data from the split etymdb files."""
@@ -131,7 +161,64 @@ class EtymologyDB:
         interesting_trees.sort(key=lambda x: x[2], reverse=True)
         return interesting_trees
 
+def collect_english_words(tree: Tree) -> Set[str]:
+    """Collect all English words from a tree."""
+    english_words = set()
+    
+    def traverse(t: Tree):
+        if not t:
+            return
+        if t['lang'] == 'en':
+            english_words.add(t['word'])
+        for child in t['children']:
+            traverse(child)
+    
+    traverse(tree)
+    return english_words
+
+def get_most_common_english_word(tree: Tree, word_frequencies: Dict[str, float]) -> str:
+    """Get the most common English word in the tree based on frequency data."""
+    english_words = collect_english_words(tree)
+    if not english_words:
+        return tree['word']  # Fallback to root word if no English words
+    
+    # Find the most frequent English word
+    most_common = max(english_words, key=lambda w: word_frequencies.get(w.lower(), 0))
+    return most_common
+
+def output_game_data(trees: List[Tuple[str, Tree, float]], word_frequencies: Dict[str, float]) -> Dict:
+    """Convert trees to game data format."""
+    game_data = {
+        "words": {},
+        "word_list": []
+    }
+    
+    for word, tree, score in trees:
+        english_words = collect_english_words(tree)
+        if not english_words:  # Skip trees with no English words
+            continue
+            
+        # Get the most common English word
+        clue_word = get_most_common_english_word(tree, word_frequencies)
+        
+        # Add to game data using the English word as the key
+        game_data["words"][clue_word] = {
+            "tree": tree,
+            "related_words": sorted(list(english_words))  # Sort for consistency
+        }
+        game_data["word_list"].append(clue_word)
+    
+    # Sort word list for consistency
+    game_data["word_list"].sort()
+    
+    return game_data
+
 def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Build etymology trees for the game.')
+    parser.add_argument('--random', action='store_true', help='Print a random clue word for testing')
+    args = parser.parse_args()
+
     db = EtymologyDB()
     print("Loading data...")
     db.load_data()
@@ -139,10 +226,26 @@ def main():
     trees = db.find_interesting_trees()
     print(f"Found {len(trees)} interesting trees")
     
-    # Print top 5 trees
-    for word, tree, score in trees[:5]:
-        print(f"\nWord: {word}, Score: {score}")
-        print_tree(tree)
+    # Generate game data
+    print("\nGenerating game data...")
+    game_data = output_game_data(trees, db.word_frequencies)
+    
+    # Save to file
+    print("Saving to game_data.js...")
+    with open('game_data.js', 'w') as f:
+        f.write('const GAME_DATA = ')
+        json.dump(game_data, f, indent=2)
+        f.write(';')
+    
+    # If --random flag is set, print a random clue word
+    if args.random:
+        random_word = random.choice(list(game_data["words"].keys()))
+        print(f"\nRandom clue word for testing: {random_word}")
+        print("\nTree structure:")
+        print_tree(game_data["words"][random_word]["tree"])
+        print("\nRelated words:", game_data["words"][random_word]["related_words"])
+    
+    print("Done!")
 
 def print_tree(tree: Tree, level: int = 0):
     """Helper function to print a tree structure."""
