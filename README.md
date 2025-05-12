@@ -33,4 +33,5 @@ http://localhost:8000/index.html
 ## Development
 - `build_trees.py`: Generates the game data from etymology database
 - `game.js`: Main game logic and tree visualization
-- `game_data.js`: Contains all the word trees and related words 
+- `game_data.js`: Contains all the word trees and related words
+

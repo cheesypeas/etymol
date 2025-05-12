@@ -1,5 +1,7 @@
 # Etymol Game Development
 
+Etymol is an etymology-based daily word game. 
+
 ## Current State
 - Web-based etymology tree guessing game
 - D3.js visualization of word trees
@@ -10,6 +12,12 @@
 - Non-English words shown in anglicized form when revealed
 
 ## Key Design Decisions
+1. Technology
+   - Fully browser-based and statically served
+   - No reliance on a database
+   - JS, CSS, HTML
+   - No react
+
 1. Tree Generation:
    - Minimum 5 nodes per tree
    - At least 4 English words required
@@ -25,6 +33,7 @@
    - Reveal All button in red to indicate give-up action
    - Feedback messages for correct/incorrect guesses
    - Non-English words displayed in anglicized form for readability
+   - Tree explorer with search and filtering capabilities
 
 3. Game Logic:
    - Words revealed when guessed or when all children are revealed
@@ -40,8 +49,7 @@
 - Store both original and anglicized forms of non-English words for flexibility
 
 ## Next Steps
-- Consider adding difficulty levels
-- Maybe add hints system
-- Could add statistics tracking
-- Might add more visual polish
-- Could add toggle between original and anglicized forms
+- A tree explorer to aid development and explore the generated data
+- Work on data generation
+- Add more visual polish
+
