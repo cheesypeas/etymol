@@ -300,7 +300,7 @@ class EtymologyDB:
             'children': children
         }
 
-    def find_all_trees(self) -> List[Tuple[str, Tree, Tree, float]]:
+    def find_all_trees(self) -> List[Tuple[str, Tree, Optional[Tree], Optional[float]]]:
         """Find all trees, both filtered and unfiltered."""
         all_trees = []
         total_trees = 0
@@ -317,19 +317,23 @@ class EtymologyDB:
                     if is_valid:
                         all_trees.append((word, unfiltered_tree, filtered_tree, score))
                     else:
+                        # Include unfiltered tree even if filtered version is invalid
+                        all_trees.append((word, unfiltered_tree, None, None))
                         rejected_trees += 1
                         rejection_reasons['invalid'] += 1
                 else:
+                    # Include unfiltered tree even if no filtered version exists
+                    all_trees.append((word, unfiltered_tree, None, None))
                     rejected_trees += 1
                     rejection_reasons['filtered_out'] += 1
         
-        # Sort by score
-        all_trees.sort(key=lambda x: x[3], reverse=True)
+        # Sort by score (None scores will be at the end)
+        all_trees.sort(key=lambda x: (x[3] is None, x[3] if x[3] is not None else 0), reverse=True)
         
         print(f"\nTree Statistics:")
         print(f"Total trees built: {total_trees}")
-        print(f"Rejected trees: {rejected_trees}")
-        print(f"Accepted trees: {len(all_trees)}")
+        print(f"Rejected filtered trees: {rejected_trees}")
+        print(f"Total trees included: {len(all_trees)}")
         print("\nRejection reasons:")
         for reason, count in rejection_reasons.items():
             print(f"  {reason}: {count}")
@@ -388,7 +392,7 @@ def output_game_data(trees: List[Tuple[str, Tree, float]], word_frequencies: Dic
     
     return game_data
 
-def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_frequencies: Dict[str, float]) -> Dict:
+def output_explorer_data(trees: List[Tuple[str, Tree, Optional[Tree], Optional[float]]], word_frequencies: Dict[str, float]) -> Dict:
     """Convert trees to explorer data format with both filtered and unfiltered versions."""
     explorer_data = {
         "words": {},
@@ -399,12 +403,12 @@ def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_freque
     used_clue_words = {}
     
     for word, unfiltered_tree, filtered_tree, score in trees:
-        english_words = collect_english_words(filtered_tree)
-        if not english_words:  # Skip trees with no English words
-            continue
-            
+        # Use filtered tree if available, otherwise use unfiltered tree
+        tree_for_words = filtered_tree if filtered_tree else unfiltered_tree
+        english_words = collect_english_words(tree_for_words)
+        
         # Get the most common English word
-        clue_word = get_most_common_english_word(filtered_tree, word_frequencies)
+        clue_word = get_most_common_english_word(tree_for_words, word_frequencies)
         
         # Handle duplicate clue words by adding a counter
         if clue_word in used_clue_words:
@@ -416,9 +420,9 @@ def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_freque
         # Add to explorer data using the English word as the key
         explorer_data["words"][clue_word] = {
             "unfiltered_tree": unfiltered_tree,
-            "filtered_tree": filtered_tree,
+            "filtered_tree": filtered_tree,  # This will be None for trees without a filtered version
             "related_words": sorted(list(english_words)),  # Sort for consistency
-            "score": score,
+            "score": score,  # This will be None for trees without a filtered version
             "original_word": word  # Store the original word for reference
         }
         explorer_data["word_list"].append(clue_word)
