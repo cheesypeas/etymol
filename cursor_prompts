@@ -7,6 +7,7 @@
 - Glosses shown as text labels below words
 - Reveal All button for giving up
 - Clean, dark theme UI
+- Non-English words shown in anglicized form when revealed
 
 ## Key Design Decisions
 1. Tree Generation:
@@ -15,6 +16,7 @@
    - At least 1 branching point
    - Prefer trees with multiple branches
    - Score based on language variety and tree complexity
+   - Non-English words stored with both original and anglicized forms
 
 2. UI/UX:
    - Dark theme for better readability
@@ -22,6 +24,7 @@
    - Glosses shown as text labels (not tooltips)
    - Reveal All button in red to indicate give-up action
    - Feedback messages for correct/incorrect guesses
+   - Non-English words displayed in anglicized form for readability
 
 3. Game Logic:
    - Words revealed when guessed or when all children are revealed
@@ -34,9 +37,11 @@
 - Exclude word_frequencies.txt (downloaded data)
 - Maintain clean, semantic git commits
 - Focus on intuitive UI without explanatory text
+- Store both original and anglicized forms of non-English words for flexibility
 
 ## Next Steps
 - Consider adding difficulty levels
 - Maybe add hints system
 - Could add statistics tracking
 - Might add more visual polish
+- Could add toggle between original and anglicized forms
