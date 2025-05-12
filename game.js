@@ -112,11 +112,17 @@ function renderTree() {
         .attr('x', d => d.children ? -9 : 9)
         .attr('text-anchor', d => d.children ? 'end' : 'start')
         .attr('fill', d => {
-            if (shouldRevealNode(d)) {
-                return '#fff';
+            // Highlight English words whether revealed or not
+            if (d.data.lang === 'en') {
+                return '#ffd700'; // gold
             }
-            return '#666';
+            // Other words
+            if (!shouldRevealNode(d)) {
+                return '#666';
+            }
+            return '#fff';
         })
+        .attr('font-weight', d => (d.data.lang === 'en') ? 'bold' : 'normal')
         .text(d => {
             if (!shouldRevealNode(d)) {
                 return '???';
