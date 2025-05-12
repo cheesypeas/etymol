@@ -67,6 +67,20 @@ button:hover {
     background-color: #d4b494;
 }
 
+button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+#reveal-button {
+    margin-left: 10px;
+    background-color: var(--error-color);
+}
+
+#reveal-button:hover:not(:disabled) {
+    background-color: #d47a3d;
+}
+
 #feedback {
     margin-top: 20px;
     font-size: 18px;

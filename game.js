@@ -2,6 +2,7 @@
 let currentWord;
 let guessedWords = new Set();
 let treeData;
+let allWordsRevealed = false;
 
 // Get a random word from the word list
 function getRandomWord() {
@@ -39,6 +40,11 @@ function initGame() {
 
 // Check if a node should be revealed based on its children
 function shouldRevealNode(node) {
+    // If all words are revealed, show everything
+    if (allWordsRevealed) {
+        return true;
+    }
+    
     // Always reveal guessed words
     if (guessedWords.has(node.data.word)) {
         return true;
@@ -167,8 +173,16 @@ function handleGuess() {
     guessInput.focus();
 }
 
+// Handle reveal all button click
+function handleRevealAll() {
+    allWordsRevealed = true;
+    renderTree();
+    document.getElementById('reveal-button').disabled = true;
+}
+
 // Event listeners
 document.getElementById('guess-button').addEventListener('click', handleGuess);
+document.getElementById('reveal-button').addEventListener('click', handleRevealAll);
 document.getElementById('guess-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         handleGuess();
