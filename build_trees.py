@@ -301,13 +301,19 @@ class EtymologyDB:
         }
 
     def find_all_trees(self) -> List[Tuple[str, Tree, Optional[Tree], Optional[float]]]:
-        """Find all trees, both filtered and unfiltered."""
+        """Find all trees, both filtered and unfiltered, starting only from ultimate roots."""
         all_trees = []
         total_trees = 0
         rejected_trees = 0
         rejection_reasons = defaultdict(int)
         
-        for idx, (lang, word, _) in self.word_data.items():
+        # Find all indices that are children in any relationship
+        all_children = set(self.relationships.keys())
+        # Ultimate roots are those not present as children
+        ultimate_roots = [idx for idx in self.word_data if idx not in all_children]
+
+        for idx in ultimate_roots:
+            lang, word, _ = self.word_data[idx]
             unfiltered_tree = self.build_unfiltered_tree(idx)
             if unfiltered_tree:
                 total_trees += 1
@@ -392,7 +398,7 @@ def output_game_data(trees: List[Tuple[str, Tree, float]], word_frequencies: Dic
     
     return game_data
 
-def output_explorer_data(trees: List[Tuple[str, Tree, Optional[Tree], Optional[float]]], word_frequencies: Dict[str, float]) -> Dict:
+def output_explorer_data(trees: List[Tuple[str, Tree, Tree, float]], word_frequencies: Dict[str, float]) -> Dict:
     """Convert trees to explorer data format with both filtered and unfiltered versions."""
     explorer_data = {
         "words": {},
@@ -406,7 +412,7 @@ def output_explorer_data(trees: List[Tuple[str, Tree, Optional[Tree], Optional[f
         # Use filtered tree if available, otherwise use unfiltered tree
         tree_for_words = filtered_tree if filtered_tree else unfiltered_tree
         english_words = collect_english_words(tree_for_words)
-        
+            
         # Get the most common English word
         clue_word = get_most_common_english_word(tree_for_words, word_frequencies)
         
