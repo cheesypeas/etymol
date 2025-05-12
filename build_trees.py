@@ -41,23 +41,6 @@ def load_word_frequencies() -> Dict[str, float]:
         download_word_frequencies()
         return load_word_frequencies()
 
-def download_scrabble_words():
-    """Download TWL word list."""
-    url = "https://raw.githubusercontent.com/topics/scrabble-word-list/master/TWL06.txt"
-    try:
-        response = requests.get(url, timeout=10)
-        if response.status_code == 200:
-            with open('scrabble_words.txt', 'w') as f:
-                f.write(response.text)
-            print("Downloaded Scrabble word list")
-            return True
-        else:
-            print(f"Failed to download Scrabble word list: HTTP {response.status_code}")
-            return False
-    except Exception as e:
-        print(f"Failed to download Scrabble word list: {str(e)}")
-        return False
-
 def load_scrabble_words() -> Set[str]:
     """Load words from system word list."""
     words = set()
@@ -100,7 +83,7 @@ class EtymologyDB:
         self.multi_parents: MultiParents = {}
         self.child_relationships: Relationships = defaultdict(list)  # parent_idx -> [(child_idx, rel_type), ...]
         self.word_frequencies = load_word_frequencies()
-        self.scrabble_words = load_scrabble_words()
+        self.valid_words = load_scrabble_words()  # Renamed from scrabble_words to valid_words
         
     def load_data(self):
         """Load all data from the split etymdb files."""
@@ -160,7 +143,7 @@ class EtymologyDB:
         """Check if a word is a valid English word using Scrabble word list and frequency."""
         word_lower = word.lower()
         # Must be in Scrabble word list and have reasonable frequency
-        return (word_lower in self.scrabble_words and 
+        return (word_lower in self.valid_words and 
                 self.word_frequencies.get(word_lower, 0) >= 0.0001)
 
     def build_tree(self, start_idx: int, visited: Optional[Set[int]] = None, seen_english: Optional[Set[str]] = None) -> Optional[Tree]:
