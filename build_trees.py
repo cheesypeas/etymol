@@ -86,6 +86,8 @@ class EtymologyDB:
         """Build a tree starting from any word index."""
         if visited is None:
             visited = set()
+        if seen_english is None:
+            seen_english = set()
         
         if start_idx in visited:
             return None  # Prevent cycles
@@ -98,14 +100,25 @@ class EtymologyDB:
         # Get word data
         lang, word, gloss = self.word_data[start_idx]
         
+        # Prune duplicate English leaves globally per tree
+        if lang == 'en':
+            if word in seen_english:
+                return None
+            seen_english.add(word)
+        
         # Build children
         children = []
         for child_idx, rel_type in self.child_relationships[start_idx]:
             if rel_type == 'inh':  # inheritance relationship
-                child_tree = self.build_tree(child_idx, visited.copy())
+                child_tree = self.build_tree(child_idx, set(visited), seen_english)
                 if child_tree:
                     children.append(child_tree)
         
+        # If this is not an English word and has no children that lead to English words, prune it
+        if lang != 'en' and not children:
+            return None
+        
+        # Create the tree
         return {
             'word': word,
             'anglicized': anglicize_word(word) if lang != 'en' else word,
@@ -151,32 +164,25 @@ class EtymologyDB:
         traverse(tree)
         
         # Hard minimums
-        if total_nodes < 5:  # Require at least 5 nodes
+        if total_nodes < 3:
             return 0.0, False
-        if is_linear:  # Reject strictly linear trees
+        if is_linear:
             return 0.0, False
-        if branch_points < 1:  # Require at least 3 branching points
+        if branch_points < 1:  # Allow trees with just 1 branch point
             return 0.0, False
-        if english_count < 4:  # Require at least 4 English words
+        if english_count < 2:
             return 0.0, False
         
         # Scoring factors:
-        # 1. Number of languages (more variety is better)
         score += len(languages) * 2
-        
-        # 2. Presence of English words (but not too many)
-        if english_count < total_nodes * 0.7:  # Not too many English words
+        if english_count < total_nodes * 0.8:
             score += english_count
-        
-        # 3. Tree size (not too small, not too large)
-        if 5 <= total_nodes <= 12:  # Increased minimum size
+        if 3 <= total_nodes <= 15:
             score += total_nodes
         else:
-            score -= abs(total_nodes - 8)  # Penalize trees that are too small or too large
-        
-        # 4. Branch diversity
-        score += branch_points * 2.0  # Each branching point adds 2 points
-        score += max_branches * 1.5   # Each additional branch at max level adds 1.5 points
+            score -= abs(total_nodes - 8)
+        score += branch_points * 2.0  # Increased weight for branch points
+        score += max_branches * 1.5
         
         return score, True
 
