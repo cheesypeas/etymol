@@ -1,6 +1,9 @@
 import csv
 import json
 import requests
+import random
+import argparse
+import os
 from collections import defaultdict
 from typing import Dict, List, Set, Tuple, Optional
 
@@ -105,18 +108,21 @@ class EtymologyDB:
             'children': children
         }
 
-    def score_tree(self, tree: Tree) -> float:
-        """Score a tree based on various factors."""
+    def score_tree(self, tree: Tree) -> Tuple[float, bool]:
+        """Score a tree based on various factors. Returns (score, is_valid)."""
         if not tree:
-            return 0.0
+            return 0.0, False
         
         score = 0.0
         languages = set()
         english_count = 0
         total_nodes = 0
+        max_branches = 0  # Track maximum number of branches at any level
+        branch_points = 0  # Count nodes with 2+ children
+        is_linear = True  # Track if tree is strictly linear
         
-        def traverse(t: Tree):
-            nonlocal score, languages, english_count, total_nodes
+        def traverse(t: Tree, current_branches: int = 0):
+            nonlocal score, languages, english_count, total_nodes, max_branches, branch_points, is_linear
             if not t:
                 return
             
@@ -125,40 +131,84 @@ class EtymologyDB:
             if t['lang'] == 'en':
                 english_count += 1
             
+            # Update branch statistics
+            if len(t['children']) > 0:
+                current_branches = len(t['children'])
+                max_branches = max(max_branches, current_branches)
+                if current_branches >= 2:
+                    branch_points += 1
+                    is_linear = False
+            
             for child in t['children']:
-                traverse(child)
+                traverse(child, current_branches)
         
         traverse(tree)
+        
+        # Hard minimums
+        if total_nodes < 5:  # Require at least 5 nodes
+            return 0.0, False
+        if is_linear:  # Reject strictly linear trees
+            return 0.0, False
+        if branch_points < 1:  # Require at least 3 branching points
+            return 0.0, False
+        if english_count < 4:  # Require at least 4 English words
+            return 0.0, False
         
         # Scoring factors:
         # 1. Number of languages (more variety is better)
         score += len(languages) * 2
         
         # 2. Presence of English words (but not too many)
-        if 0 < english_count < total_nodes * 0.7:  # At least one English word, but not too many
+        if english_count < total_nodes * 0.7:  # Not too many English words
             score += english_count
         
         # 3. Tree size (not too small, not too large)
-        if 3 <= total_nodes <= 10:
+        if 5 <= total_nodes <= 12:  # Increased minimum size
             score += total_nodes
         else:
-            score -= abs(total_nodes - 6)  # Penalize trees that are too small or too large
+            score -= abs(total_nodes - 8)  # Penalize trees that are too small or too large
         
-        return score
+        # 4. Branch diversity
+        score += branch_points * 2.0  # Each branching point adds 2 points
+        score += max_branches * 1.5   # Each additional branch at max level adds 1.5 points
+        
+        return score, True
 
     def find_interesting_trees(self, min_score: float = 5.0) -> List[Tuple[str, Tree, float]]:
         """Find interesting trees by building from each word and scoring them."""
         interesting_trees = []
+        total_trees = 0
+        rejected_trees = 0
+        rejection_reasons = defaultdict(int)
         
         for idx, (lang, word, _) in self.word_data.items():
             tree = self.build_tree(idx)
             if tree:
-                score = self.score_tree(tree)
-                if score >= min_score:
+                total_trees += 1
+                score, is_valid = self.score_tree(tree)
+                if is_valid and score >= min_score:
                     interesting_trees.append((word, tree, score))
+                else:
+                    rejected_trees += 1
+                    # Track rejection reasons
+                    if not tree:
+                        rejection_reasons['no_tree'] += 1
+                    elif score < min_score:
+                        rejection_reasons['low_score'] += 1
+                    else:
+                        rejection_reasons['invalid'] += 1
         
         # Sort by score
         interesting_trees.sort(key=lambda x: x[2], reverse=True)
+        
+        print(f"\nTree Statistics:")
+        print(f"Total trees built: {total_trees}")
+        print(f"Rejected trees: {rejected_trees}")
+        print(f"Accepted trees: {len(interesting_trees)}")
+        print("\nRejection reasons:")
+        for reason, count in rejection_reasons.items():
+            print(f"  {reason}: {count}")
+        
         return interesting_trees
 
 def collect_english_words(tree: Tree) -> Set[str]:
@@ -219,12 +269,20 @@ def main():
     parser.add_argument('--random', action='store_true', help='Print a random clue word for testing')
     args = parser.parse_args()
 
+    # Clear old data files
+    print("Clearing old data files...")
+    for file in ['game_data.js', 'word_frequencies.txt']:
+        try:
+            os.remove(file)
+            print(f"Removed {file}")
+        except FileNotFoundError:
+            pass
+
     db = EtymologyDB()
     print("Loading data...")
     db.load_data()
     print("Finding interesting trees...")
     trees = db.find_interesting_trees()
-    print(f"Found {len(trees)} interesting trees")
     
     # Generate game data
     print("\nGenerating game data...")
