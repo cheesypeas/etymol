@@ -46,11 +46,18 @@ h1 {
 input[type="text"] {
     padding: 10px;
     font-size: 16px;
-    border: none;
+    border: 1px solid #444;
     border-radius: 4px;
     margin-right: 10px;
     background-color: var(--input-bg);
     color: var(--text-color);
+    transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(196, 164, 132, 0.2);
 }
 
 button {
