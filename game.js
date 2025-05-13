@@ -4,6 +4,9 @@ let guessedWords = new Set();
 let treeData;
 let allWordsRevealed = false;
 let tooltip;
+let selectedIndex = -1;
+let suggestions = [];
+let systemWords = new Set(); // Store system words
 
 // Get a random word from the word list
 function getRandomWord() {
@@ -44,11 +47,38 @@ function initGame() {
         .style('pointer-events', 'none')
         .style('z-index', '1000');
     
+    // Load system words
+    loadSystemWords();
+    
     // Render the initial tree (with English words redacted, except clue word)
     renderTree();
     
+    // Set up guess input autocomplete
+    const guessInput = document.getElementById('guess-input');
+    guessInput.addEventListener('input', handleGuessInput);
+    guessInput.addEventListener('keydown', handleGuessKeydown);
+    
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (event) => {
+        const guessContainer = document.querySelector('.guess-container');
+        if (!guessContainer.contains(event.target)) {
+            hideSuggestions();
+        }
+    });
+    
     // Focus the input field
-    document.getElementById('guess-input').focus();
+    guessInput.focus();
+}
+
+// Load system words from the word list
+function loadSystemWords() {
+    // Add all words from the game's word list
+    GAME_DATA.word_list.forEach(word => systemWords.add(word.toLowerCase()));
+    
+    // Add all related words from all puzzles
+    Object.values(GAME_DATA.words).forEach(wordData => {
+        wordData.related_words.forEach(word => systemWords.add(word.toLowerCase()));
+    });
 }
 
 // Check if a node should be revealed based on its children
@@ -163,19 +193,23 @@ function renderTree() {
             if (!shouldRevealNode(d)) {
                 return '???';
             }
-            // Use anglicized form for non-English words
-            if (d.data.lang !== 'en') {
-                return d.data.anglicized;
-            }
-            return d.data.word;
+            return d.data.word;  // Always show actual word
         })
         // Add tooltip behavior
         .on('mouseover', function(event, d) {
-            if (shouldRevealNode(d) && d.data.gloss) {
+            if (shouldRevealNode(d)) {
                 tooltip.transition()
                     .duration(200)
                     .style('opacity', .9);
-                tooltip.html(d.data.gloss)
+                let tooltipText = '';
+                if (d.data.lang !== 'en') {
+                    tooltipText += `Anglicized: ${d.data.anglicized}<br>`;
+                }
+                tooltipText += `Language: ${d.data.lang}<br>`;
+                if (d.data.gloss) {
+                    tooltipText += `Meaning: ${d.data.gloss}`;
+                }
+                tooltip.html(tooltipText)
                     .style('left', (event.pageX + 10) + 'px')
                     .style('top', (event.pageY - 28) + 'px');
             }
@@ -218,6 +252,153 @@ function handleRevealAll() {
     allWordsRevealed = true;
     renderTree();
     document.getElementById('reveal-button').disabled = true;
+}
+
+// Handle guess input changes
+function handleGuessInput(event) {
+    const guessInput = event.target;
+    const searchTerm = guessInput.value.toLowerCase().trim();
+    
+    if (searchTerm.length < 2) {
+        hideSuggestions();
+        return;
+    }
+    
+    // Filter valid words that haven't been guessed
+    suggestions = Array.from(systemWords)
+        .filter(word => 
+            word.includes(searchTerm) && 
+            !guessedWords.has(word)
+        )
+        .sort((a, b) => {
+            // Sort by whether the word is in the current puzzle's related words
+            const aIsRelated = GAME_DATA.words[currentWord].related_words.includes(a);
+            const bIsRelated = GAME_DATA.words[currentWord].related_words.includes(b);
+            if (aIsRelated && !bIsRelated) return -1;
+            if (!aIsRelated && bIsRelated) return 1;
+            return a.localeCompare(b);
+        })
+        .slice(0, 10); // Limit to 10 suggestions
+    
+    if (suggestions.length > 0) {
+        showSuggestions(suggestions);
+    } else {
+        hideSuggestions();
+    }
+}
+
+// Handle keyboard navigation in suggestions
+function handleGuessKeydown(event) {
+    const suggestionsDiv = document.querySelector('.suggestions');
+    
+    switch (event.key) {
+        case 'ArrowDown':
+            event.preventDefault();
+            if (suggestionsDiv) {
+                selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+                updateSelectedSuggestion();
+            }
+            break;
+            
+        case 'ArrowUp':
+            event.preventDefault();
+            if (suggestionsDiv) {
+                selectedIndex = Math.max(selectedIndex - 1, 0);
+                updateSelectedSuggestion();
+            }
+            break;
+            
+        case 'Enter':
+            event.preventDefault();
+            if (suggestionsDiv && selectedIndex >= 0 && selectedIndex < suggestions.length) {
+                const guessInput = document.getElementById('guess-input');
+                guessInput.value = suggestions[selectedIndex];
+                handleGuess();
+                hideSuggestions();
+            } else {
+                handleGuess();
+            }
+            break;
+            
+        case 'Escape':
+            hideSuggestions();
+            break;
+    }
+}
+
+// Show suggestions dropdown
+function showSuggestions(results) {
+    // Remove existing suggestions
+    hideSuggestions();
+    
+    // Create suggestions container
+    const suggestionsDiv = document.createElement('div');
+    suggestionsDiv.className = 'suggestions';
+    suggestionsDiv.style.position = 'absolute';
+    suggestionsDiv.style.top = '100%';
+    suggestionsDiv.style.left = '0';
+    suggestionsDiv.style.width = document.getElementById('guess-input').offsetWidth + 'px';  // Match input width exactly
+    suggestionsDiv.style.background = '#222';
+    suggestionsDiv.style.border = '1px solid #444';
+    suggestionsDiv.style.borderRadius = '4px';
+    suggestionsDiv.style.maxHeight = '200px';
+    suggestionsDiv.style.overflowY = 'auto';
+    suggestionsDiv.style.zIndex = '1000';
+    
+    // Add suggestion items
+    results.forEach((word, index) => {
+        const item = document.createElement('div');
+        item.className = 'suggestion-item';
+        item.textContent = word;
+        item.style.padding = '8px';
+        item.style.cursor = 'pointer';
+        item.style.color = '#fff';
+        
+        item.addEventListener('mouseover', () => {
+            selectedIndex = index;
+            updateSelectedSuggestion();
+        });
+        
+        item.addEventListener('click', () => {
+            const guessInput = document.getElementById('guess-input');
+            guessInput.value = word;
+            handleGuess();
+            hideSuggestions();
+        });
+        
+        suggestionsDiv.appendChild(item);
+    });
+    
+    // Add to DOM - position relative to input field
+    const inputField = document.getElementById('guess-input');
+    const inputRect = inputField.getBoundingClientRect();
+    const containerRect = inputField.parentElement.getBoundingClientRect();
+    
+    suggestionsDiv.style.position = 'fixed';
+    suggestionsDiv.style.top = (inputRect.bottom) + 'px';
+    suggestionsDiv.style.left = (inputRect.left) + 'px';
+    
+    document.body.appendChild(suggestionsDiv);
+    
+    // Reset selection
+    selectedIndex = -1;
+}
+
+// Update the selected suggestion
+function updateSelectedSuggestion() {
+    const items = document.querySelectorAll('.suggestion-item');
+    items.forEach((item, index) => {
+        item.style.background = index === selectedIndex ? '#444' : '';
+    });
+}
+
+// Hide suggestions dropdown
+function hideSuggestions() {
+    const suggestionsDiv = document.querySelector('.suggestions');
+    if (suggestionsDiv) {
+        suggestionsDiv.remove();
+    }
+    selectedIndex = -1;
 }
 
 // Event listeners

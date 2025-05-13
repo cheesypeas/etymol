@@ -96,26 +96,32 @@ function handleSearch(event) {
 // Handle keyboard navigation in search
 function handleSearchKeydown(event) {
     const searchResultsDiv = document.querySelector('.search-results');
-    if (!searchResultsDiv) return;
     
     switch (event.key) {
         case 'ArrowDown':
             event.preventDefault();
-            selectedIndex = Math.min(selectedIndex + 1, searchResults.length - 1);
-            updateSelectedResult();
+            if (searchResultsDiv) {
+                selectedIndex = Math.min(selectedIndex + 1, searchResults.length - 1);
+                updateSelectedResult();
+            }
             break;
             
         case 'ArrowUp':
             event.preventDefault();
-            selectedIndex = Math.max(selectedIndex - 1, 0);
-            updateSelectedResult();
+            if (searchResultsDiv) {
+                selectedIndex = Math.max(selectedIndex - 1, 0);
+                updateSelectedResult();
+            }
             break;
             
         case 'Enter':
             event.preventDefault();
-            if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+            if (searchResultsDiv && selectedIndex >= 0 && selectedIndex < searchResults.length) {
                 showWord(searchResults[selectedIndex]);
                 hideSearchResults();
+            } else {
+                // If no search results are shown, trigger the Go button
+                handleGoButton();
             }
             break;
             
@@ -430,18 +436,22 @@ function renderTree(containerId, treeData, isUnfiltered) {
         .attr('text-anchor', d => d.children ? 'end' : 'start')
         .attr('fill', d => d.data.lang === 'en' ? '#ffd700' : '#fff')
         .attr('font-weight', d => d.data.lang === 'en' ? 'bold' : 'normal')
-        .text(d => d.data.lang !== 'en' ? d.data.anglicized : d.data.word)
+        .text(d => d.data.word)  // Always show actual word
         // Add tooltip behavior
         .on('mouseover', function(event, d) {
             if (d.data.gloss) {
                 tooltip.transition()
                     .duration(200)
                     .style('opacity', .9);
-                tooltip.html(`
-                    Word: ${d.data.word}<br>
-                    Language: ${d.data.lang}<br>
-                    Gloss: ${d.data.gloss}
-                `)
+                let tooltipText = '';
+                if (d.data.lang !== 'en') {
+                    tooltipText += `Anglicized: ${d.data.anglicized}<br>`;
+                }
+                tooltipText += `Language: ${d.data.lang}<br>`;
+                if (d.data.gloss) {
+                    tooltipText += `Meaning: ${d.data.gloss}`;
+                }
+                tooltip.html(tooltipText)
                     .style('left', (event.pageX + 10) + 'px')
                     .style('top', (event.pageY - 28) + 'px');
             }
