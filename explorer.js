@@ -45,10 +45,25 @@ function handleSearch(event) {
         return;
     }
     
-    // Find matching words
-    searchResults = EXPLORER_DATA.word_list.filter(word => 
-        word.toLowerCase().includes(searchTerm)
-    );
+    // Find matching words in all trees
+    searchResults = [];
+    const seenWords = new Set(); // Track unique words to handle duplicates
+    
+    for (const [clueWord, data] of Object.entries(EXPLORER_DATA.words)) {
+        // Add clue word if it matches
+        if (clueWord.toLowerCase().includes(searchTerm) && !seenWords.has(clueWord)) {
+            searchResults.push(clueWord);
+            seenWords.add(clueWord);
+        }
+        
+        // Add related words if they match
+        for (const word of data.related_words) {
+            if (word.toLowerCase().includes(searchTerm) && !seenWords.has(word)) {
+                searchResults.push(word);
+                seenWords.add(word);
+            }
+        }
+    }
     
     if (searchResults.length > 0) {
         showSearchResults(searchResults);
@@ -153,16 +168,38 @@ function showError(message) {
 
 // Show a word's trees
 function showWord(word) {
-    currentWord = word;
-    const wordData = EXPLORER_DATA.words[word];
+    // Find the tree containing this word
+    let treeData;
+    let foundWord = word;
+    
+    // First check if it's a clue word
+    if (EXPLORER_DATA.words[word]) {
+        treeData = EXPLORER_DATA.words[word];
+    } else {
+        // Search through all trees to find the one containing this word
+        for (const [clueWord, data] of Object.entries(EXPLORER_DATA.words)) {
+            if (data.related_words.includes(word)) {
+                treeData = data;
+                foundWord = clueWord;
+                break;
+            }
+        }
+    }
+    
+    if (!treeData) {
+        showError(`Could not find tree containing "${word}"`);
+        return;
+    }
+    
+    currentWord = foundWord;
     
     // Render both trees
-    renderTree('unfiltered-tree-container', wordData.unfiltered_tree, true);
-    renderTree('filtered-tree-container', wordData.filtered_tree, false);
+    renderTree('unfiltered-tree-container', treeData.unfiltered_tree, true);
+    renderTree('filtered-tree-container', treeData.filtered_tree, false);
     
     // Update stats
-    updateStats('unfiltered-stats', wordData.unfiltered_tree);
-    updateStats('filtered-stats', wordData.filtered_tree);
+    updateStats('unfiltered-stats', treeData.unfiltered_tree);
+    updateStats('filtered-stats', treeData.filtered_tree);
 }
 
 // Calculate tree statistics
