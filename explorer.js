@@ -168,30 +168,132 @@ function showError(message) {
 
 // Show a word's trees
 function showWord(word) {
-    // Find the tree containing this word
-    let treeData;
-    let foundWord = word;
+    // Find all trees containing this word
+    const matchingTrees = [];
     
     // First check if it's a clue word
     if (EXPLORER_DATA.words[word]) {
-        treeData = EXPLORER_DATA.words[word];
-    } else {
-        // Search through all trees to find the one containing this word
-        for (const [clueWord, data] of Object.entries(EXPLORER_DATA.words)) {
-            if (data.related_words.includes(word)) {
-                treeData = data;
-                foundWord = clueWord;
-                break;
-            }
+        matchingTrees.push({
+            clueWord: word,
+            data: EXPLORER_DATA.words[word]
+        });
+    }
+    
+    // Search through all trees to find ones containing this word
+    for (const [clueWord, data] of Object.entries(EXPLORER_DATA.words)) {
+        if (data.related_words.includes(word) && clueWord !== word) {
+            matchingTrees.push({
+                clueWord: clueWord,
+                data: data
+            });
         }
     }
     
-    if (!treeData) {
+    if (matchingTrees.length === 0) {
         showError(`Could not find tree containing "${word}"`);
         return;
     }
     
-    currentWord = foundWord;
+    // If multiple trees found, show selector
+    if (matchingTrees.length > 1) {
+        showTreeSelector(word, matchingTrees);
+    } else {
+        // Single tree found, show it directly
+        displayTree(matchingTrees[0].clueWord, matchingTrees[0].data);
+    }
+}
+
+// Show tree selector UI when multiple trees are found
+function showTreeSelector(word, trees) {
+    // Remove existing selector if any
+    const existingSelector = document.querySelector('.tree-selector');
+    if (existingSelector) {
+        existingSelector.remove();
+    }
+    
+    // Create selector container
+    const selector = document.createElement('div');
+    selector.className = 'tree-selector';
+    selector.style.position = 'fixed';
+    selector.style.top = '50%';
+    selector.style.left = '50%';
+    selector.style.transform = 'translate(-50%, -50%)';
+    selector.style.background = '#222';
+    selector.style.padding = '20px';
+    selector.style.borderRadius = '8px';
+    selector.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+    selector.style.zIndex = '1000';
+    
+    // Add title
+    const title = document.createElement('h3');
+    title.textContent = `"${word}" appears in multiple trees. Select one to view:`;
+    title.style.margin = '0 0 15px 0';
+    title.style.color = '#fff';
+    selector.appendChild(title);
+    
+    // Add tree options
+    const optionsList = document.createElement('ul');
+    optionsList.style.listStyle = 'none';
+    optionsList.style.padding = '0';
+    optionsList.style.margin = '0';
+    
+    trees.forEach(({clueWord, data}) => {
+        const li = document.createElement('li');
+        li.style.margin = '10px 0';
+        
+        const button = document.createElement('button');
+        button.textContent = `Tree starting with "${clueWord}"`;
+        button.style.width = '100%';
+        button.style.padding = '8px';
+        button.style.background = '#444';
+        button.style.border = 'none';
+        button.style.borderRadius = '4px';
+        button.style.color = '#fff';
+        button.style.cursor = 'pointer';
+        
+        button.addEventListener('mouseover', () => {
+            button.style.background = '#555';
+        });
+        
+        button.addEventListener('mouseout', () => {
+            button.style.background = '#444';
+        });
+        
+        button.addEventListener('click', () => {
+            selector.remove();
+            displayTree(clueWord, data);
+        });
+        
+        li.appendChild(button);
+        optionsList.appendChild(li);
+    });
+    
+    selector.appendChild(optionsList);
+    
+    // Add close button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Cancel';
+    closeButton.style.marginTop = '15px';
+    closeButton.style.padding = '8px 16px';
+    closeButton.style.background = '#666';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '4px';
+    closeButton.style.color = '#fff';
+    closeButton.style.cursor = 'pointer';
+    
+    closeButton.addEventListener('click', () => {
+        selector.remove();
+    });
+    
+    selector.appendChild(closeButton);
+    
+    // Add to DOM
+    document.body.appendChild(selector);
+}
+
+// Display a specific tree
+function displayTree(clueWord, treeData) {
+    currentWord = clueWord;
     
     // Render both trees
     renderTree('unfiltered-tree-container', treeData.unfiltered_tree, true);
