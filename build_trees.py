@@ -507,12 +507,17 @@ def main():
     parser.add_argument('--explorer', action='store_true', help='Generate explorer data with unfiltered trees')
     args = parser.parse_args()
 
-    # Clear old data files
-    print("Clearing old data files...")
-    for file in ['game_data.js', 'explorer_data.js', 'word_frequencies.txt']:
+    # Clear only the data file that will be regenerated
+    if args.explorer:
         try:
-            os.remove(file)
-            print(f"Removed {file}")
+            os.remove('explorer_data.js')
+            print("Removed explorer_data.js")
+        except FileNotFoundError:
+            pass
+    else:
+        try:
+            os.remove('game_data.js')
+            print("Removed game_data.js")
         except FileNotFoundError:
             pass
 
