@@ -20,8 +20,11 @@ function initExplorer() {
     
     // Set up search functionality
     const searchInput = document.getElementById('search-input');
+    const searchGo = document.getElementById('search-go');
+    
     searchInput.addEventListener('input', handleSearch);
     searchInput.addEventListener('keydown', handleSearchKeydown);
+    searchGo.addEventListener('click', handleGoButton);
     
     // Close dropdown when clicking outside
     document.addEventListener('click', (event) => {
@@ -35,6 +38,23 @@ function initExplorer() {
     if (EXPLORER_DATA.word_list.length > 0) {
         showWord(EXPLORER_DATA.word_list[0]);
     }
+}
+
+// Handle Go button click
+function handleGoButton() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput.value.trim();
+    
+    if (searchTerm.length < 2) {
+        showError('Please enter at least 2 characters');
+        return;
+    }
+    
+    // Hide any existing search results
+    hideSearchResults();
+    
+    // Try to find the exact word
+    showWord(searchTerm);
 }
 
 // Handle search input
