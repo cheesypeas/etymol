@@ -242,7 +242,10 @@ function showTreeSelector(word, trees) {
         li.style.margin = '10px 0';
         
         const button = document.createElement('button');
-        button.textContent = `Tree starting with "${clueWord}"`;
+        // Get the root word from the unfiltered tree
+        const rootWord = data.unfiltered_tree.word;
+        const rootLang = data.unfiltered_tree.lang;
+        button.textContent = `Tree from ${rootWord} (${rootLang})`;
         button.style.width = '100%';
         button.style.padding = '8px';
         button.style.background = '#444';
