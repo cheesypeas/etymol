@@ -1548,238 +1548,6 @@ const GAME_DATA = {
         "worm"
       ]
     },
-    "type": {
-      "tree": {
-        "word": "(s)tewp-",
-        "anglicized": "(s)tewp-",
-        "lang": "ine-pro",
-        "gloss": "to push, to pierce, to prick",
-        "children": [
-          {
-            "word": "\u03c4\u03cd\u03c0\u03c4\u03c9",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "to strike, to beat",
-            "children": [
-              {
-                "word": "\u03c4\u03cd\u03c0\u03bf\u03c2",
-                "anglicized": "",
-                "lang": "grc",
-                "gloss": "mark, impression, type",
-                "children": [
-                  {
-                    "word": "\u03c4\u03c5\u03c0\u03b9\u03ba\u03cc\u03c2",
-                    "anglicized": "",
-                    "lang": "grc",
-                    "gloss": "of or pertaining to a type, conformable, typical",
-                    "children": [
-                      {
-                        "word": "typicus",
-                        "anglicized": "typicus",
-                        "lang": "la",
-                        "gloss": "typical",
-                        "children": [
-                          {
-                            "word": "typicalis",
-                            "anglicized": "typicalis",
-                            "lang": "la-lat",
-                            "gloss": "typical",
-                            "children": [
-                              {
-                                "word": "typical",
-                                "anglicized": "typical",
-                                "lang": "en",
-                                "gloss": "typical",
-                                "children": []
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "word": "typus",
-                    "anglicized": "typus",
-                    "lang": "la",
-                    "gloss": "symbol, figure, emblem",
-                    "children": [
-                      {
-                        "word": "type",
-                        "anglicized": "type",
-                        "lang": "enm",
-                        "gloss": "symbol, figure, emblem",
-                        "children": [
-                          {
-                            "word": "type",
-                            "anglicized": "type",
-                            "lang": "en",
-                            "gloss": "type",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "steupa-",
-            "anglicized": "steupa-",
-            "lang": "gem-pro",
-            "gloss": "orphaned, step-",
-            "children": [
-              {
-                "word": "st\u0113op-",
-                "anglicized": "steop-",
-                "lang": "ang",
-                "gloss": "deprived of a relative, step-",
-                "children": [
-                  {
-                    "word": "step-",
-                    "anglicized": "step-",
-                    "lang": "enm",
-                    "gloss": "consanguinity",
-                    "children": [
-                      {
-                        "word": "consanguinity",
-                        "anglicized": "consanguinity",
-                        "lang": "en",
-                        "gloss": "consanguinity",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "consanguinity",
-        "type",
-        "typical"
-      ]
-    },
-    "port": {
-      "tree": {
-        "word": "per-",
-        "anglicized": "per-",
-        "lang": "ine-pro",
-        "gloss": "to go forth, to cross",
-        "children": [
-          {
-            "word": "p\u00e9rtus",
-            "anglicized": "pertus",
-            "lang": "ine-pro",
-            "gloss": "crossing",
-            "children": [
-              {
-                "word": "furduz",
-                "anglicized": "furduz",
-                "lang": "gem-pro",
-                "gloss": "ford",
-                "children": [
-                  {
-                    "word": "ford",
-                    "anglicized": "ford",
-                    "lang": "ang",
-                    "gloss": "ford",
-                    "children": [
-                      {
-                        "word": "ford",
-                        "anglicized": "ford",
-                        "lang": "enm",
-                        "gloss": "ford",
-                        "children": [
-                          {
-                            "word": "ford",
-                            "anglicized": "ford",
-                            "lang": "en",
-                            "gloss": "ford",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "word": "portus",
-                "anglicized": "portus",
-                "lang": "la",
-                "gloss": "port, harbour",
-                "children": [
-                  {
-                    "word": "port",
-                    "anglicized": "port",
-                    "lang": "ang",
-                    "gloss": "port",
-                    "children": [
-                      {
-                        "word": "port",
-                        "anglicized": "port",
-                        "lang": "en",
-                        "gloss": "port",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "\u03c0\u03b5\u1fd6\u03c1\u03b1",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "trial, attempt, plot",
-            "children": [
-              {
-                "word": "\u03c0\u03b5\u03b9\u03c1\u03b1\u03c4\u03ae\u03c2",
-                "anglicized": "",
-                "lang": "grc",
-                "gloss": "pirate",
-                "children": [
-                  {
-                    "word": "p\u012br\u0101ta",
-                    "anglicized": "pirata",
-                    "lang": "la",
-                    "gloss": "pirate",
-                    "children": [
-                      {
-                        "word": "pirate",
-                        "anglicized": "pirate",
-                        "lang": "fro",
-                        "gloss": "pirate",
-                        "children": [
-                          {
-                            "word": "pirate",
-                            "anglicized": "pirate",
-                            "lang": "en",
-                            "gloss": "pirate",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "ford",
-        "pirate",
-        "port"
-      ]
-    },
     "fluid": {
       "tree": {
         "word": "b\u02b0el-",
@@ -2404,98 +2172,6 @@ const GAME_DATA = {
         "great"
       ]
     },
-    "hour": {
-      "tree": {
-        "word": "k\u0101ro-",
-        "anglicized": "karo-",
-        "lang": "ine-pro",
-        "gloss": "dear, beloved",
-        "children": [
-          {
-            "word": "h\u014dr\u01ed",
-            "anglicized": "horo",
-            "lang": "gem-pro",
-            "gloss": "whore",
-            "children": [
-              {
-                "word": "h\u014dre",
-                "anglicized": "hore",
-                "lang": "ang",
-                "gloss": "whore",
-                "children": [
-                  {
-                    "word": "hore",
-                    "anglicized": "hore",
-                    "lang": "enm",
-                    "gloss": "whore",
-                    "children": [
-                      {
-                        "word": "whore",
-                        "anglicized": "whore",
-                        "lang": "en",
-                        "gloss": "whore",
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "word": "houre",
-                    "anglicized": "houre",
-                    "lang": "enm",
-                    "gloss": "hour",
-                    "children": [
-                      {
-                        "word": "hour",
-                        "anglicized": "hour",
-                        "lang": "en",
-                        "gloss": "hour",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "c\u0101rus",
-            "anglicized": "carus",
-            "lang": "la",
-            "gloss": "dear, beloved",
-            "children": [
-              {
-                "word": "carezza",
-                "anglicized": "carezza",
-                "lang": "it",
-                "gloss": "dear",
-                "children": [
-                  {
-                    "word": "caresse",
-                    "anglicized": "caresse",
-                    "lang": "fr",
-                    "gloss": "caress",
-                    "children": [
-                      {
-                        "word": "caress",
-                        "anglicized": "caress",
-                        "lang": "en",
-                        "gloss": "caress",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "caress",
-        "hour",
-        "whore"
-      ]
-    },
     "wet": {
       "tree": {
         "word": "wed-",
@@ -2594,6 +2270,98 @@ const GAME_DATA = {
         "lynx",
         "nutria",
         "wet"
+      ]
+    },
+    "hour": {
+      "tree": {
+        "word": "k\u0101ro-",
+        "anglicized": "karo-",
+        "lang": "ine-pro",
+        "gloss": "dear, beloved",
+        "children": [
+          {
+            "word": "h\u014dr\u01ed",
+            "anglicized": "horo",
+            "lang": "gem-pro",
+            "gloss": "whore",
+            "children": [
+              {
+                "word": "h\u014dre",
+                "anglicized": "hore",
+                "lang": "ang",
+                "gloss": "whore",
+                "children": [
+                  {
+                    "word": "hore",
+                    "anglicized": "hore",
+                    "lang": "enm",
+                    "gloss": "whore",
+                    "children": [
+                      {
+                        "word": "whore",
+                        "anglicized": "whore",
+                        "lang": "en",
+                        "gloss": "whore",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "word": "houre",
+                    "anglicized": "houre",
+                    "lang": "enm",
+                    "gloss": "hour",
+                    "children": [
+                      {
+                        "word": "hour",
+                        "anglicized": "hour",
+                        "lang": "en",
+                        "gloss": "hour",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "word": "c\u0101rus",
+            "anglicized": "carus",
+            "lang": "la",
+            "gloss": "dear, beloved",
+            "children": [
+              {
+                "word": "carezza",
+                "anglicized": "carezza",
+                "lang": "it",
+                "gloss": "dear",
+                "children": [
+                  {
+                    "word": "caresse",
+                    "anglicized": "caresse",
+                    "lang": "fr",
+                    "gloss": "caress",
+                    "children": [
+                      {
+                        "word": "caress",
+                        "anglicized": "caress",
+                        "lang": "en",
+                        "gloss": "caress",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "related_words": [
+        "caress",
+        "hour",
+        "whore"
       ]
     },
     "camp": {
@@ -4260,254 +4028,6 @@ const GAME_DATA = {
         "whole"
       ]
     },
-    "full": {
-      "tree": {
-        "word": "pleh\u2081-",
-        "anglicized": "pleh-",
-        "lang": "ine-pro",
-        "gloss": "to fill",
-        "children": [
-          {
-            "word": "pl\u0325h\u2081-g\u00f3s",
-            "anglicized": "plh-gos",
-            "lang": "ine-pro",
-            "gloss": "folk",
-            "children": [
-              {
-                "word": "fulk\u0105",
-                "anglicized": "fulka",
-                "lang": "gem-pro",
-                "gloss": "folk",
-                "children": [
-                  {
-                    "word": "folc",
-                    "anglicized": "folc",
-                    "lang": "ang",
-                    "gloss": "folk",
-                    "children": [
-                      {
-                        "word": "folk",
-                        "anglicized": "folk",
-                        "lang": "enm",
-                        "gloss": "folk",
-                        "children": [
-                          {
-                            "word": "folk",
-                            "anglicized": "folk",
-                            "lang": "en",
-                            "gloss": "folk",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "pl\u0325h\u2081n\u00f3s",
-            "anglicized": "plhnos",
-            "lang": "ine-pro",
-            "gloss": "full",
-            "children": [
-              {
-                "word": "fullaz",
-                "anglicized": "fullaz",
-                "lang": "gem-pro",
-                "gloss": "full",
-                "children": [
-                  {
-                    "word": "fullijan\u0105",
-                    "anglicized": "fullijana",
-                    "lang": "gem-pro",
-                    "gloss": "to make full, to fill",
-                    "children": [
-                      {
-                        "word": "fyllan",
-                        "anglicized": "fyllan",
-                        "lang": "ang",
-                        "gloss": "to fill, to fill up, to replenish, to satisfy; complete, fulfill",
-                        "children": [
-                          {
-                            "word": "fullen",
-                            "anglicized": "fullen",
-                            "lang": "enm",
-                            "gloss": "full",
-                            "children": [
-                              {
-                                "word": "full",
-                                "anglicized": "full",
-                                "lang": "en",
-                                "gloss": "full",
-                                "children": []
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "word": "-fullaz",
-                    "anglicized": "-fullaz",
-                    "lang": "gem-pro",
-                    "gloss": "-ful",
-                    "children": [
-                      {
-                        "word": "optical",
-                        "anglicized": "optical",
-                        "lang": "en",
-                        "gloss": "optical",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "folk",
-        "full",
-        "optical"
-      ]
-    },
-    "moon": {
-      "tree": {
-        "word": "meh\u2081-",
-        "anglicized": "meh-",
-        "lang": "ine-pro",
-        "gloss": "to measure",
-        "children": [
-          {
-            "word": "m\u1e17h\u2081n\u0325s",
-            "anglicized": "mehns",
-            "lang": "ine-pro",
-            "gloss": "moon, month",
-            "children": [
-              {
-                "word": "m\u0113n\u00f4",
-                "anglicized": "meno",
-                "lang": "gem-pro",
-                "gloss": "moon",
-                "children": [
-                  {
-                    "word": "m\u014dna",
-                    "anglicized": "mona",
-                    "lang": "ang",
-                    "gloss": "moon",
-                    "children": [
-                      {
-                        "word": "mone",
-                        "anglicized": "mone",
-                        "lang": "enm",
-                        "gloss": "moon",
-                        "children": [
-                          {
-                            "word": "moon",
-                            "anglicized": "moon",
-                            "lang": "en",
-                            "gloss": "moon",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "word": "m\u0113nsis",
-                "anglicized": "mensis",
-                "lang": "la",
-                "gloss": "month",
-                "children": [
-                  {
-                    "word": "menses",
-                    "anglicized": "menses",
-                    "lang": "en",
-                    "gloss": "menses",
-                    "children": []
-                  },
-                  {
-                    "word": "m\u0113nstruus",
-                    "anglicized": "menstruus",
-                    "lang": "la",
-                    "gloss": "of or pertaining to a month, monthly",
-                    "children": [
-                      {
-                        "word": "menstrualis",
-                        "anglicized": "menstrualis",
-                        "lang": "la",
-                        "gloss": "menstrual",
-                        "children": [
-                          {
-                            "word": "menstruall",
-                            "anglicized": "menstruall",
-                            "lang": "enm",
-                            "gloss": "menstrual",
-                            "children": [
-                              {
-                                "word": "menstrual",
-                                "anglicized": "menstrual",
-                                "lang": "en",
-                                "gloss": "menstrual",
-                                "children": []
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "m\u0113l\u0105",
-            "anglicized": "mela",
-            "lang": "gem-pro",
-            "gloss": "measure, time, occasion, set time, time for eating, meal",
-            "children": [
-              {
-                "word": "m\u01e3l",
-                "anglicized": "ml",
-                "lang": "ang",
-                "gloss": "measure, time, occasion, set time, time for eating, meal",
-                "children": [
-                  {
-                    "word": "mel",
-                    "anglicized": "mel",
-                    "lang": "enm",
-                    "gloss": "meal",
-                    "children": [
-                      {
-                        "word": "meal",
-                        "anglicized": "meal",
-                        "lang": "en",
-                        "gloss": "meal",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "meal",
-        "menses",
-        "menstrual",
-        "moon"
-      ]
-    },
     "ring": {
       "tree": {
         "word": "(s)ker-",
@@ -4768,74 +4288,106 @@ const GAME_DATA = {
         "shrine"
       ]
     },
-    "character": {
+    "full": {
       "tree": {
-        "word": "\u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03ae\u03c1",
-        "anglicized": "",
-        "lang": "grc",
-        "gloss": "mark, character",
+        "word": "pleh\u2081-",
+        "anglicized": "pleh-",
+        "lang": "ine-pro",
+        "gloss": "to fill",
         "children": [
           {
-            "word": "\u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03b7\u03c1\u03af\u03b6\u03c9",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "to designate by a characteristic mark",
+            "word": "pl\u0325h\u2081-g\u00f3s",
+            "anglicized": "plh-gos",
+            "lang": "ine-pro",
+            "gloss": "folk",
             "children": [
               {
-                "word": "\u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03b7\u03c1\u03b9\u03c3\u03c4\u03b9\u03ba\u03cc\u03c2",
-                "anglicized": "",
-                "lang": "grc",
-                "gloss": "characteristic",
+                "word": "fulk\u0105",
+                "anglicized": "fulka",
+                "lang": "gem-pro",
+                "gloss": "folk",
                 "children": [
                   {
-                    "word": "characteristic",
-                    "anglicized": "characteristic",
-                    "lang": "en",
-                    "gloss": "characteristic",
-                    "children": []
-                  }
-                ]
-              },
-              {
-                "word": "characterizare",
-                "anglicized": "characterizare",
-                "lang": "la-med",
-                "gloss": "characterize",
-                "children": [
-                  {
-                    "word": "characterize",
-                    "anglicized": "characterize",
-                    "lang": "en",
-                    "gloss": "characterize",
-                    "children": []
+                    "word": "folc",
+                    "anglicized": "folc",
+                    "lang": "ang",
+                    "gloss": "folk",
+                    "children": [
+                      {
+                        "word": "folk",
+                        "anglicized": "folk",
+                        "lang": "enm",
+                        "gloss": "folk",
+                        "children": [
+                          {
+                            "word": "folk",
+                            "anglicized": "folk",
+                            "lang": "en",
+                            "gloss": "folk",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               }
             ]
           },
           {
-            "word": "character",
-            "anglicized": "character",
-            "lang": "la",
-            "gloss": "character",
+            "word": "pl\u0325h\u2081n\u00f3s",
+            "anglicized": "plhnos",
+            "lang": "ine-pro",
+            "gloss": "full",
             "children": [
               {
-                "word": "caractere",
-                "anglicized": "caractere",
-                "lang": "fro",
-                "gloss": "character",
+                "word": "fullaz",
+                "anglicized": "fullaz",
+                "lang": "gem-pro",
+                "gloss": "full",
                 "children": [
                   {
-                    "word": "caracter",
-                    "anglicized": "caracter",
-                    "lang": "enm",
-                    "gloss": "character",
+                    "word": "fullijan\u0105",
+                    "anglicized": "fullijana",
+                    "lang": "gem-pro",
+                    "gloss": "to make full, to fill",
                     "children": [
                       {
-                        "word": "character",
-                        "anglicized": "character",
+                        "word": "fyllan",
+                        "anglicized": "fyllan",
+                        "lang": "ang",
+                        "gloss": "to fill, to fill up, to replenish, to satisfy; complete, fulfill",
+                        "children": [
+                          {
+                            "word": "fullen",
+                            "anglicized": "fullen",
+                            "lang": "enm",
+                            "gloss": "full",
+                            "children": [
+                              {
+                                "word": "full",
+                                "anglicized": "full",
+                                "lang": "en",
+                                "gloss": "full",
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "word": "-fullaz",
+                    "anglicized": "-fullaz",
+                    "lang": "gem-pro",
+                    "gloss": "-ful",
+                    "children": [
+                      {
+                        "word": "optical",
+                        "anglicized": "optical",
                         "lang": "en",
-                        "gloss": "character",
+                        "gloss": "optical",
                         "children": []
                       }
                     ]
@@ -4847,9 +4399,141 @@ const GAME_DATA = {
         ]
       },
       "related_words": [
-        "character",
-        "characteristic",
-        "characterize"
+        "folk",
+        "full",
+        "optical"
+      ]
+    },
+    "moon": {
+      "tree": {
+        "word": "meh\u2081-",
+        "anglicized": "meh-",
+        "lang": "ine-pro",
+        "gloss": "to measure",
+        "children": [
+          {
+            "word": "m\u1e17h\u2081n\u0325s",
+            "anglicized": "mehns",
+            "lang": "ine-pro",
+            "gloss": "moon, month",
+            "children": [
+              {
+                "word": "m\u0113n\u00f4",
+                "anglicized": "meno",
+                "lang": "gem-pro",
+                "gloss": "moon",
+                "children": [
+                  {
+                    "word": "m\u014dna",
+                    "anglicized": "mona",
+                    "lang": "ang",
+                    "gloss": "moon",
+                    "children": [
+                      {
+                        "word": "mone",
+                        "anglicized": "mone",
+                        "lang": "enm",
+                        "gloss": "moon",
+                        "children": [
+                          {
+                            "word": "moon",
+                            "anglicized": "moon",
+                            "lang": "en",
+                            "gloss": "moon",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "word": "m\u0113nsis",
+                "anglicized": "mensis",
+                "lang": "la",
+                "gloss": "month",
+                "children": [
+                  {
+                    "word": "menses",
+                    "anglicized": "menses",
+                    "lang": "en",
+                    "gloss": "menses",
+                    "children": []
+                  },
+                  {
+                    "word": "m\u0113nstruus",
+                    "anglicized": "menstruus",
+                    "lang": "la",
+                    "gloss": "of or pertaining to a month, monthly",
+                    "children": [
+                      {
+                        "word": "menstrualis",
+                        "anglicized": "menstrualis",
+                        "lang": "la",
+                        "gloss": "menstrual",
+                        "children": [
+                          {
+                            "word": "menstruall",
+                            "anglicized": "menstruall",
+                            "lang": "enm",
+                            "gloss": "menstrual",
+                            "children": [
+                              {
+                                "word": "menstrual",
+                                "anglicized": "menstrual",
+                                "lang": "en",
+                                "gloss": "menstrual",
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "word": "m\u0113l\u0105",
+            "anglicized": "mela",
+            "lang": "gem-pro",
+            "gloss": "measure, time, occasion, set time, time for eating, meal",
+            "children": [
+              {
+                "word": "m\u01e3l",
+                "anglicized": "ml",
+                "lang": "ang",
+                "gloss": "measure, time, occasion, set time, time for eating, meal",
+                "children": [
+                  {
+                    "word": "mel",
+                    "anglicized": "mel",
+                    "lang": "enm",
+                    "gloss": "meal",
+                    "children": [
+                      {
+                        "word": "meal",
+                        "anglicized": "meal",
+                        "lang": "en",
+                        "gloss": "meal",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "related_words": [
+        "meal",
+        "menses",
+        "menstrual",
+        "moon"
       ]
     },
     "boat": {
@@ -5042,6 +4726,90 @@ const GAME_DATA = {
         "blow",
         "blown",
         "bolster"
+      ]
+    },
+    "character": {
+      "tree": {
+        "word": "\u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03ae\u03c1",
+        "anglicized": "",
+        "lang": "grc",
+        "gloss": "mark, character",
+        "children": [
+          {
+            "word": "\u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03b7\u03c1\u03af\u03b6\u03c9",
+            "anglicized": "",
+            "lang": "grc",
+            "gloss": "to designate by a characteristic mark",
+            "children": [
+              {
+                "word": "\u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03b7\u03c1\u03b9\u03c3\u03c4\u03b9\u03ba\u03cc\u03c2",
+                "anglicized": "",
+                "lang": "grc",
+                "gloss": "characteristic",
+                "children": [
+                  {
+                    "word": "characteristic",
+                    "anglicized": "characteristic",
+                    "lang": "en",
+                    "gloss": "characteristic",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "word": "characterizare",
+                "anglicized": "characterizare",
+                "lang": "la-med",
+                "gloss": "characterize",
+                "children": [
+                  {
+                    "word": "characterize",
+                    "anglicized": "characterize",
+                    "lang": "en",
+                    "gloss": "characterize",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "word": "character",
+            "anglicized": "character",
+            "lang": "la",
+            "gloss": "character",
+            "children": [
+              {
+                "word": "caractere",
+                "anglicized": "caractere",
+                "lang": "fro",
+                "gloss": "character",
+                "children": [
+                  {
+                    "word": "caracter",
+                    "anglicized": "caracter",
+                    "lang": "enm",
+                    "gloss": "character",
+                    "children": [
+                      {
+                        "word": "character",
+                        "anglicized": "character",
+                        "lang": "en",
+                        "gloss": "character",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "related_words": [
+        "character",
+        "characteristic",
+        "characterize"
       ]
     },
     "row": {
@@ -5318,174 +5086,6 @@ const GAME_DATA = {
         "choler",
         "cholera",
         "choleric"
-      ]
-    },
-    "clerk": {
-      "tree": {
-        "word": "\u03ba\u03bb\u03b7\u03c1\u03b9\u03ba\u03cc\u03c2",
-        "anglicized": "",
-        "lang": "grc",
-        "gloss": "priest, clergyman, cleric, also generally a learned man, clerk",
-        "children": [
-          {
-            "word": "cl\u0113ricus",
-            "anglicized": "clericus",
-            "lang": "la-lat",
-            "gloss": "priest, clergyman, cleric&quot;, also generally &quot;a learned man, clerk",
-            "children": [
-              {
-                "word": "clerc",
-                "anglicized": "clerc",
-                "lang": "ang",
-                "gloss": "clerk",
-                "children": [
-                  {
-                    "word": "clerc",
-                    "anglicized": "clerc",
-                    "lang": "enm",
-                    "gloss": "clerk",
-                    "children": [
-                      {
-                        "word": "clerk",
-                        "anglicized": "clerk",
-                        "lang": "en",
-                        "gloss": "clerk",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "word": "cleric",
-                "anglicized": "cleric",
-                "lang": "en",
-                "gloss": "cleric",
-                "children": []
-              }
-            ]
-          },
-          {
-            "word": "cl\u0113ricus",
-            "anglicized": "clericus",
-            "lang": "la",
-            "gloss": "clergyman, priest",
-            "children": [
-              {
-                "word": "cl\u0113ric\u0101lis",
-                "anglicized": "clericalis",
-                "lang": "la-lat",
-                "gloss": "clerical",
-                "children": [
-                  {
-                    "word": "clerical",
-                    "anglicized": "clerical",
-                    "lang": "en",
-                    "gloss": "clerical",
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "cleric",
-        "clerical",
-        "clerk"
-      ]
-    },
-    "police": {
-      "tree": {
-        "word": "\u03c0\u03bf\u03bb\u03af\u03c4\u03b7\u03c2",
-        "anglicized": "",
-        "lang": "grc",
-        "gloss": "citizen",
-        "children": [
-          {
-            "word": "\u03c0\u03bf\u03bb\u03b9\u03c4\u03b5\u03af\u03b1",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "citizenship; polis, (city) state; government",
-            "children": [
-              {
-                "word": "politia",
-                "anglicized": "politia",
-                "lang": "la",
-                "gloss": "citizenship; government",
-                "children": [
-                  {
-                    "word": "police",
-                    "anglicized": "police",
-                    "lang": "frm",
-                    "gloss": "police",
-                    "children": [
-                      {
-                        "word": "police",
-                        "anglicized": "police",
-                        "lang": "en",
-                        "gloss": "police",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "\u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03cc\u03c2",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "politic",
-            "children": [
-              {
-                "word": "politicus",
-                "anglicized": "politicus",
-                "lang": "la",
-                "gloss": "politic",
-                "children": [
-                  {
-                    "word": "politico",
-                    "anglicized": "politico",
-                    "lang": "it",
-                    "gloss": "politico",
-                    "children": [
-                      {
-                        "word": "politico",
-                        "anglicized": "politico",
-                        "lang": "en",
-                        "gloss": "politico",
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "word": "politique",
-                    "anglicized": "politique",
-                    "lang": "frm",
-                    "gloss": "politic",
-                    "children": [
-                      {
-                        "word": "politic",
-                        "anglicized": "politic",
-                        "lang": "en",
-                        "gloss": "politic",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "police",
-        "politic",
-        "politico"
       ]
     },
     "sweet": {
@@ -5908,66 +5508,6 @@ const GAME_DATA = {
         "elf"
       ]
     },
-    "platinum": {
-      "tree": {
-        "word": "plat",
-        "anglicized": "plat",
-        "lang": "fr",
-        "gloss": "flat",
-        "children": [
-          {
-            "word": "platitude",
-            "anglicized": "platitude",
-            "lang": "fr",
-            "gloss": "platitude",
-            "children": [
-              {
-                "word": "platitude",
-                "anglicized": "platitude",
-                "lang": "en",
-                "gloss": "platitude",
-                "children": []
-              }
-            ]
-          },
-          {
-            "word": "platine",
-            "anglicized": "platine",
-            "lang": "fr",
-            "gloss": "platen",
-            "children": [
-              {
-                "word": "platina",
-                "anglicized": "platina",
-                "lang": "es",
-                "gloss": "little silver",
-                "children": [
-                  {
-                    "word": "platinum",
-                    "anglicized": "platinum",
-                    "lang": "en",
-                    "gloss": "platinum",
-                    "children": []
-                  }
-                ]
-              },
-              {
-                "word": "platen",
-                "anglicized": "platen",
-                "lang": "en",
-                "gloss": "platen",
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "platen",
-        "platinum",
-        "platitude"
-      ]
-    },
     "web": {
       "tree": {
         "word": "web\u02b0-",
@@ -6320,132 +5860,64 @@ const GAME_DATA = {
         "flower"
       ]
     },
-    "strong": {
+    "platinum": {
       "tree": {
-        "word": "extr\u0101neus",
-        "anglicized": "extraneus",
-        "lang": "la",
-        "gloss": "external, foreign; strange",
+        "word": "plat",
+        "anglicized": "plat",
+        "lang": "fr",
+        "gloss": "flat",
         "children": [
           {
-            "word": "extraneous",
-            "anglicized": "extraneous",
-            "lang": "en",
-            "gloss": "extraneous",
-            "children": []
-          },
-          {
-            "word": "estrange",
-            "anglicized": "estrange",
-            "lang": "fro",
-            "gloss": "foreign, alien",
+            "word": "platitude",
+            "anglicized": "platitude",
+            "lang": "fr",
+            "gloss": "platitude",
             "children": [
               {
-                "word": "strong",
-                "anglicized": "strong",
-                "lang": "enm",
-                "gloss": "strong",
-                "children": [
-                  {
-                    "word": "strong",
-                    "anglicized": "strong",
-                    "lang": "en",
-                    "gloss": "strong",
-                    "children": []
-                  }
-                ]
-              },
-              {
-                "word": "estrangier",
-                "anglicized": "estrangier",
-                "lang": "fro",
-                "gloss": "foreign, alien",
-                "children": [
-                  {
-                    "word": "stranger",
-                    "anglicized": "stranger",
-                    "lang": "en",
-                    "gloss": "stranger",
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "extraneous",
-        "stranger",
-        "strong"
-      ]
-    },
-    "elliptic": {
-      "tree": {
-        "word": "\u1f10\u03bb\u03bb\u03b5\u03af\u03c0\u03c9",
-        "anglicized": "",
-        "lang": "grc",
-        "gloss": "to leave out, to omit",
-        "children": [
-          {
-            "word": "\u1f10\u03bb\u03bb\u03b5\u03b9\u03c0\u03c4\u03b9\u03ba\u03cc\u03c2",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "elliptic",
-            "children": [
-              {
-                "word": "elliptic",
-                "anglicized": "elliptic",
+                "word": "platitude",
+                "anglicized": "platitude",
                 "lang": "en",
-                "gloss": "elliptic",
+                "gloss": "platitude",
                 "children": []
               }
             ]
           },
           {
-            "word": "\u1f14\u03bb\u03bb\u03b5\u03b9\u03c8\u03b9\u03c2",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "omission",
+            "word": "platine",
+            "anglicized": "platine",
+            "lang": "fr",
+            "gloss": "platen",
             "children": [
               {
-                "word": "ellipsis",
-                "anglicized": "ellipsis",
-                "lang": "la",
-                "gloss": "ellipsis",
+                "word": "platina",
+                "anglicized": "platina",
+                "lang": "es",
+                "gloss": "little silver",
                 "children": [
                   {
-                    "word": "ellipsis",
-                    "anglicized": "ellipsis",
+                    "word": "platinum",
+                    "anglicized": "platinum",
                     "lang": "en",
-                    "gloss": "ellipsis",
+                    "gloss": "platinum",
                     "children": []
-                  },
-                  {
-                    "word": "ellipse",
-                    "anglicized": "ellipse",
-                    "lang": "fr",
-                    "gloss": "ellipse",
-                    "children": [
-                      {
-                        "word": "ellipse",
-                        "anglicized": "ellipse",
-                        "lang": "en",
-                        "gloss": "ellipse",
-                        "children": []
-                      }
-                    ]
                   }
                 ]
+              },
+              {
+                "word": "platen",
+                "anglicized": "platen",
+                "lang": "en",
+                "gloss": "platen",
+                "children": []
               }
             ]
           }
         ]
       },
       "related_words": [
-        "ellipse",
-        "ellipsis",
-        "elliptic"
+        "platen",
+        "platinum",
+        "platitude"
       ]
     },
     "campaign": {
@@ -6620,6 +6092,66 @@ const GAME_DATA = {
         "kemp"
       ]
     },
+    "strong": {
+      "tree": {
+        "word": "extr\u0101neus",
+        "anglicized": "extraneus",
+        "lang": "la",
+        "gloss": "external, foreign; strange",
+        "children": [
+          {
+            "word": "extraneous",
+            "anglicized": "extraneous",
+            "lang": "en",
+            "gloss": "extraneous",
+            "children": []
+          },
+          {
+            "word": "estrange",
+            "anglicized": "estrange",
+            "lang": "fro",
+            "gloss": "foreign, alien",
+            "children": [
+              {
+                "word": "strong",
+                "anglicized": "strong",
+                "lang": "enm",
+                "gloss": "strong",
+                "children": [
+                  {
+                    "word": "strong",
+                    "anglicized": "strong",
+                    "lang": "en",
+                    "gloss": "strong",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "word": "estrangier",
+                "anglicized": "estrangier",
+                "lang": "fro",
+                "gloss": "foreign, alien",
+                "children": [
+                  {
+                    "word": "stranger",
+                    "anglicized": "stranger",
+                    "lang": "en",
+                    "gloss": "stranger",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "related_words": [
+        "extraneous",
+        "stranger",
+        "strong"
+      ]
+    },
     "wolf": {
       "tree": {
         "word": "w\u013a\u0325k\u02b7os",
@@ -6758,194 +6290,6 @@ const GAME_DATA = {
         "lupus",
         "werewolf",
         "wolf"
-      ]
-    },
-    "antagonist": {
-      "tree": {
-        "word": "\u1f00\u03b3\u03ce\u03bd",
-        "anglicized": "",
-        "lang": "grc",
-        "gloss": "contest",
-        "children": [
-          {
-            "word": "\u1f00\u03b3\u03c9\u03bd\u03af\u03b1",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "emulation, competition, struggle",
-            "children": [
-              {
-                "word": "agony",
-                "anglicized": "agony",
-                "lang": "en",
-                "gloss": "agony",
-                "children": []
-              }
-            ]
-          },
-          {
-            "word": "\u1f00\u03bd\u03c4\u03b1\u03b3\u03c9\u03bd\u03af\u03b6\u03b5\u03c3\u03b8\u03b1\u03b9",
-            "anglicized": "",
-            "lang": "grc",
-            "gloss": "antagonize",
-            "children": [
-              {
-                "word": "\u1f00\u03bd\u03c4\u03b1\u03b3\u03c9\u03bd\u03b9\u03c3\u03c4\u03ae\u03c2",
-                "anglicized": "",
-                "lang": "grc",
-                "gloss": "opponent",
-                "children": [
-                  {
-                    "word": "antagonista",
-                    "anglicized": "antagonista",
-                    "lang": "la",
-                    "gloss": "antagonist",
-                    "children": [
-                      {
-                        "word": "antagonist",
-                        "anglicized": "antagonist",
-                        "lang": "en",
-                        "gloss": "antagonist",
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "word": "antagonism",
-                    "anglicized": "antagonism",
-                    "lang": "en",
-                    "gloss": "antagonism",
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "agony",
-        "antagonism",
-        "antagonist"
-      ]
-    },
-    "diplomatic": {
-      "tree": {
-        "word": "\u03b4\u03af\u03c0\u03bb\u03c9\u03bc\u03b1",
-        "anglicized": "",
-        "lang": "grc",
-        "gloss": "double-folded document",
-        "children": [
-          {
-            "word": "diplomatique",
-            "anglicized": "diplomatique",
-            "lang": "fr",
-            "gloss": "diplomatic",
-            "children": [
-              {
-                "word": "diplomatic",
-                "anglicized": "diplomatic",
-                "lang": "en",
-                "gloss": "diplomatic",
-                "children": []
-              },
-              {
-                "word": "diplomatie",
-                "anglicized": "diplomatie",
-                "lang": "fr",
-                "gloss": "diplomacy",
-                "children": [
-                  {
-                    "word": "diplomacy",
-                    "anglicized": "diplomacy",
-                    "lang": "en",
-                    "gloss": "diplomacy",
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "diplomate",
-            "anglicized": "diplomate",
-            "lang": "fr",
-            "gloss": "diplomat",
-            "children": [
-              {
-                "word": "diplomat",
-                "anglicized": "diplomat",
-                "lang": "en",
-                "gloss": "diplomat",
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "diplomacy",
-        "diplomat",
-        "diplomatic"
-      ]
-    },
-    "spectrum": {
-      "tree": {
-        "word": "speci\u014d",
-        "anglicized": "specio",
-        "lang": "la",
-        "gloss": "look at, view",
-        "children": [
-          {
-            "word": "specimen",
-            "anglicized": "specimen",
-            "lang": "la",
-            "gloss": "mark, sign, example",
-            "children": [
-              {
-                "word": "specimen",
-                "anglicized": "specimen",
-                "lang": "en",
-                "gloss": "specimen",
-                "children": []
-              }
-            ]
-          },
-          {
-            "word": "spectrum",
-            "anglicized": "spectrum",
-            "lang": "la",
-            "gloss": "appearance, image, apparition",
-            "children": [
-              {
-                "word": "spectrum",
-                "anglicized": "spectrum",
-                "lang": "en",
-                "gloss": "spectrum",
-                "children": []
-              },
-              {
-                "word": "spectre",
-                "anglicized": "spectre",
-                "lang": "fr",
-                "gloss": "specter",
-                "children": [
-                  {
-                    "word": "specter",
-                    "anglicized": "specter",
-                    "lang": "en",
-                    "gloss": "specter",
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "specimen",
-        "specter",
-        "spectrum"
       ]
     },
     "captain": {
@@ -9024,202 +8368,6 @@ const GAME_DATA = {
         "linen"
       ]
     },
-    "version": {
-      "tree": {
-        "word": "wer-",
-        "anglicized": "wer-",
-        "lang": "ine-pro",
-        "gloss": "to turn, to bend",
-        "children": [
-          {
-            "word": "wrey\u1e31-",
-            "anglicized": "wreyk-",
-            "lang": "ine-pro",
-            "gloss": "to turn, to wrap, to tie",
-            "children": [
-              {
-                "word": "wr\u012bhan\u0105",
-                "anglicized": "wrihana",
-                "lang": "gem-pro",
-                "gloss": "to wrap, to cover",
-                "children": [
-                  {
-                    "word": "wr\u0113on",
-                    "anglicized": "wreon",
-                    "lang": "ang",
-                    "gloss": "to cover, to clothe, to envelop, to conceal, to hide, to protect, to defend",
-                    "children": [
-                      {
-                        "word": "wryen ~ wrien ~ wreon ~ wrihen",
-                        "anglicized": "wryen ~ wrien ~ wreon ~ wrihen",
-                        "lang": "enm",
-                        "gloss": "wry",
-                        "children": [
-                          {
-                            "word": "wry",
-                            "anglicized": "wry",
-                            "lang": "en",
-                            "gloss": "wry",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "wrey-",
-            "anglicized": "wrey-",
-            "lang": "ine-pro",
-            "gloss": "to turn; wrap; bind",
-            "children": [
-              {
-                "word": "wristuz",
-                "anglicized": "wristuz",
-                "lang": "gem-pro",
-                "gloss": "wrist",
-                "children": [
-                  {
-                    "word": "wrist",
-                    "anglicized": "wrist",
-                    "lang": "ang",
-                    "gloss": "wrist",
-                    "children": [
-                      {
-                        "word": "wrist",
-                        "anglicized": "wrist",
-                        "lang": "enm",
-                        "gloss": "wrist",
-                        "children": [
-                          {
-                            "word": "wrist",
-                            "anglicized": "wrist",
-                            "lang": "en",
-                            "gloss": "wrist",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "vert\u014d",
-            "anglicized": "verto",
-            "lang": "la",
-            "gloss": "to turn",
-            "children": [
-              {
-                "word": "versi\u014d",
-                "anglicized": "versio",
-                "lang": "la",
-                "gloss": "change, turning; version",
-                "children": [
-                  {
-                    "word": "version",
-                    "anglicized": "version",
-                    "lang": "frm",
-                    "gloss": "version",
-                    "children": [
-                      {
-                        "word": "version",
-                        "anglicized": "version",
-                        "lang": "en",
-                        "gloss": "version",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "word": "versus",
-                "anglicized": "versus",
-                "lang": "la",
-                "gloss": "line, row",
-                "children": [
-                  {
-                    "word": "verse",
-                    "anglicized": "verse",
-                    "lang": "en",
-                    "gloss": "verse",
-                    "children": []
-                  }
-                ]
-              },
-              {
-                "word": "vertebra",
-                "anglicized": "vertebra",
-                "lang": "la",
-                "gloss": "joint",
-                "children": [
-                  {
-                    "word": "vertebra",
-                    "anglicized": "vertebra",
-                    "lang": "en",
-                    "gloss": "vertebra",
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "word": "wreyt-",
-            "anglicized": "wreyt-",
-            "lang": "ine-pro",
-            "gloss": "to turn",
-            "children": [
-              {
-                "word": "wrai\u00feaz",
-                "anglicized": "wraiaz",
-                "lang": "gem-pro",
-                "gloss": "cruel",
-                "children": [
-                  {
-                    "word": "wr\u0101\u00fe",
-                    "anglicized": "wra",
-                    "lang": "ang",
-                    "gloss": "wroth",
-                    "children": [
-                      {
-                        "word": "wroth",
-                        "anglicized": "wroth",
-                        "lang": "enm",
-                        "gloss": "wroth",
-                        "children": [
-                          {
-                            "word": "wroth",
-                            "anglicized": "wroth",
-                            "lang": "en",
-                            "gloss": "wroth",
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "related_words": [
-        "verse",
-        "version",
-        "vertebra",
-        "wrist",
-        "wroth",
-        "wry"
-      ]
-    },
     "drive": {
       "tree": {
         "word": "d\u02b0er-",
@@ -9928,7 +9076,7 @@ const GAME_DATA = {
   "word_list": [
     "album",
     "amateur",
-    "antagonist",
+    "ask",
     "ask",
     "ask",
     "ask",
@@ -9949,23 +9097,31 @@ const GAME_DATA = {
     "campaign",
     "captain",
     "character",
-    "character",
     "cholera",
-    "clerk",
     "climate",
     "climate",
     "cloth",
     "colony",
     "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
+    "colony",
     "course",
     "dark",
     "deal",
-    "diplomatic",
     "do",
     "domestic",
     "drive",
     "edge",
-    "elliptic",
     "fan",
     "five",
     "floor",
@@ -9984,11 +9140,12 @@ const GAME_DATA = {
     "green",
     "group",
     "group",
+    "group",
     "grow",
     "gymnasium",
     "hour",
     "hour",
-    "hour",
+    "in",
     "in",
     "in",
     "in",
@@ -10021,14 +9178,17 @@ const GAME_DATA = {
     "platinum",
     "platinum",
     "platinum",
-    "police",
-    "port",
     "rank",
     "real",
     "real",
     "real",
     "real",
     "real",
+    "real",
+    "real",
+    "real",
+    "ring",
+    "ring",
     "ring",
     "ring",
     "row",
@@ -10037,9 +9197,11 @@ const GAME_DATA = {
     "seminary",
     "serve",
     "serve",
+    "serve",
     "seven",
     "sharp",
-    "spectrum",
+    "strong",
+    "strong",
     "strong",
     "strong",
     "sweet",
@@ -10047,8 +9209,6 @@ const GAME_DATA = {
     "sweet",
     "tongue",
     "twine",
-    "type",
-    "version",
     "web",
     "web",
     "well",
@@ -10056,7 +9216,6 @@ const GAME_DATA = {
     "whole",
     "wine",
     "wolf",
-    "word",
     "word",
     "word",
     "word",
