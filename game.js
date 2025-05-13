@@ -237,18 +237,32 @@ function renderTree() {
 function handleGuess() {
     const guessInput = document.getElementById('guess-input');
     const guess = guessInput.value.toLowerCase().trim();
+    const guessContainer = document.querySelector('.guess-container');
+    const feedback = document.getElementById('feedback');
     
     if (!guess) return;
     
-    const feedback = document.getElementById('feedback');
+    // Remove any existing animation classes
+    guessContainer.classList.remove('shake', 'pulse');
+    feedback.classList.remove('show');
+    
+    // Force a reflow to ensure the animation can be triggered again
+    void guessContainer.offsetWidth;
     
     if (guessedWords.has(guess)) {
-        feedback.textContent = 'You already guessed that word!';
+        // Already guessed - shake the input
+        guessContainer.classList.add('shake');
+        feedback.textContent = 'Already guessed!';
         feedback.className = 'incorrect';
+        feedback.classList.add('show');
     } else if (GAME_DATA.words[currentWord].related_words.includes(guess)) {
-        guessedWords.add(guess);
+        // Correct guess - pulse the input
+        guessContainer.classList.add('pulse');
         feedback.textContent = 'Correct!';
         feedback.className = 'correct';
+        feedback.classList.add('show');
+        
+        guessedWords.add(guess);
         
         // Find and reveal the path to the guessed word
         function findPathToWord(node, targetWord, path = []) {
@@ -274,28 +288,25 @@ function handleGuess() {
         const root = d3.hierarchy(treeData);
         const path = findPathToWord(root, guess);
         
-        // Debug logging
-        console.log('Finding path to word:', guess);
-        console.log('Path found:', path ? path.map(n => n.data.word) : 'No path found');
-        
         // Reveal all nodes in the path
         if (path) {
             path.forEach(node => {
                 if (node.data && node.data.word) {
                     revealedNodes.add(node.data.word);
-                    console.log('Revealing node:', node.data.word);
                 }
             });
         }
         
         // Also reveal the guessed word itself
         revealedNodes.add(guess);
-        console.log('Revealed nodes:', Array.from(revealedNodes));
         
         renderTree();
     } else {
-        feedback.textContent = 'Incorrect. Try again!';
+        // Incorrect guess - shake the input
+        guessContainer.classList.add('shake');
+        feedback.textContent = 'Try again!';
         feedback.className = 'incorrect';
+        feedback.classList.add('show');
         
         // Reveal one more node for incorrect guess
         const nextNode = getNextNodeToReveal();

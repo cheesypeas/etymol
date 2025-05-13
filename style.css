@@ -68,6 +68,11 @@ button {
     background-color: var(--accent-color);
     color: var(--bg-color);
     cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 button:hover {
@@ -91,6 +96,15 @@ button:disabled {
 #feedback {
     margin-top: 20px;
     font-size: 18px;
+    min-height: 27px;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#feedback.show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .correct {
@@ -131,4 +145,41 @@ button:disabled {
     max-width: 200px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Animation keyframes */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Feedback animations */
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+.pulse {
+    animation: pulse 0.4s ease-in-out;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Update input container for shake effect */
+.guess-container {
+    display: inline-flex;
+    align-items: center;
 } 
