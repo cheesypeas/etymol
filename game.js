@@ -66,9 +66,7 @@ function countNonEnglishWords(tree) {
         
         // Check current node
         if (node.lang !== 'en') {
-            if (!revealedNodes.has(node.word)) {
-                count++;
-            }
+            count++;
         }
         
         // Traverse children
@@ -151,13 +149,14 @@ function getNextNodeToReveal() {
     }
     traverse(root);
     
-    // Filter out already revealed nodes, the clue word, and correct answers
+    // Filter out already revealed nodes, the clue word, correct answers, and English nodes
     const unrevealedNodes = allNodes.filter(node => 
         node.data && 
         node.data.word && 
         !revealedNodes.has(node.data.word) && 
         node.data.word !== currentWord &&
-        !GAME_DATA.words[currentWord].related_words.includes(node.data.word)
+        !GAME_DATA.words[currentWord].related_words.includes(node.data.word) &&
+        node.data.lang !== 'en'  // Only consider non-English nodes
     );
     
     // If no unrevealed nodes, return null
@@ -362,7 +361,8 @@ function updateScoreDisplay() {
     // Create dots for remaining guesses
     for (let i = 0; i < maxIncorrectGuesses; i++) {
         const dot = document.createElement('div');
-        dot.className = `guess-dot${i < incorrectGuesses ? ' used' : ''}`;
+        // If this dot's index is in the last 'incorrectGuesses' positions, it should be dimmed
+        dot.className = `guess-dot${i >= (maxIncorrectGuesses - incorrectGuesses) ? ' used' : ''}`;
         guessesContainer.appendChild(dot);
     }
 }
@@ -476,8 +476,12 @@ function handleGuess() {
         }
     }
     
+    // Clear input and refocus
     guessInput.value = '';
     guessInput.focus();
+    
+    // Hide suggestions
+    hideSuggestions();
 }
 
 // Handle reveal all button click
@@ -676,6 +680,30 @@ function initGame() {
     
     // Calculate max incorrect guesses (number of unrevealed non-English words)
     maxIncorrectGuesses = countNonEnglishWords(treeData);
+    
+    // Create stats container
+    const statsContainer = document.createElement('div');
+    statsContainer.className = 'stats-container';
+
+    // Create and append guesses container (dots)
+    const guessesContainer = document.createElement('div');
+    guessesContainer.id = 'guesses-container';
+    statsContainer.appendChild(guessesContainer);
+
+    // Create and append progress bar
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'progress-container';
+    const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
+    progressBar.id = 'words-progress';
+    progressContainer.appendChild(progressBar);
+    statsContainer.appendChild(progressContainer);
+
+    // Insert stats container before feedback
+    const feedback = document.getElementById('feedback');
+    feedback.parentNode.insertBefore(statsContainer, feedback);
+    
+    // Initialize the display
     updateScoreDisplay();
     updateWordsDisplay();
     

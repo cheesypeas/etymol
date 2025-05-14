@@ -244,9 +244,42 @@ button:disabled {
 .stats-container {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    margin: 20px 0;
     align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+#guesses-container {
+    display: flex;
+    gap: 8px;
+}
+
+.guess-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.guess-dot.used {
+    opacity: 0.2;
+}
+
+.progress-container {
+    width: 200px;
+    height: 4px;
+    background-color: var(--input-bg);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-color) 0%, var(--success-color) 100%);
+    width: 0%;
+    transition: width 0.3s ease;
 }
 
 #score-display, #words-display {
@@ -300,12 +333,12 @@ button:disabled {
     height: 8px;
     border-radius: 50%;
     background-color: var(--accent-color);
-    opacity: 0.2;
+    opacity: 1;
     transition: opacity 0.3s ease;
 }
 
 .guess-dot.used {
-    opacity: 1;
+    opacity: 0.2;
 }
 
 .progress-container {
