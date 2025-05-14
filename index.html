@@ -25,6 +25,42 @@
             <div id="guesses-container"></div>
         </div>
     </div>
+
+    <!-- Game Instructions Overlay -->
+    <div id="instructions-overlay" class="overlay">
+        <div class="overlay-content">
+            <h2>How to Play</h2>
+            <p>Guess English words related to the clue word by exploring their etymological connections.</p>
+            <ul>
+                <li>Start with the clue word shown in gold</li>
+                <li>Guess related English words</li>
+                <li>Each incorrect guess reveals a non-English word</li>
+                <li>Find all English words to win!</li>
+            </ul>
+            <button id="start-game" class="primary-button">Start Game</button>
+        </div>
+    </div>
+
+    <!-- Final Score Overlay -->
+    <div id="score-overlay" class="overlay hidden">
+        <div class="overlay-content">
+            <h2 id="final-title">Game Over</h2>
+            <div id="final-score"></div>
+            <div class="score-stats">
+                <div class="score-stat">
+                    <div class="stat-label">Words Found</div>
+                    <div class="stat-value" id="words-found-count"></div>
+                </div>
+                <div class="score-stat">
+                    <div class="stat-label">Incorrect Guesses</div>
+                    <div class="stat-value" id="incorrect-guesses-count"></div>
+                </div>
+            </div>
+            <div id="final-words"></div>
+            <button id="play-again" class="primary-button">Play Again</button>
+        </div>
+    </div>
+
     <script src="game_data.js"></script>
     <script src="system_words.js"></script>
     <script src="game.js"></script>

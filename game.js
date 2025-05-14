@@ -398,22 +398,31 @@ function handleGameOver(isWin) {
     
     // Show score overlay
     const scoreOverlay = document.getElementById('score-overlay');
+    const finalTitle = document.getElementById('final-title');
     const finalScore = document.getElementById('final-score');
     const finalWords = document.getElementById('final-words');
+    const wordsFoundCount = document.getElementById('words-found-count');
+    const incorrectGuessesCount = document.getElementById('incorrect-guesses-count');
     
     if (isWin) {
         container.classList.add('win-animation');
         createConfetti();
-        finalScore.textContent = 'Congratulations! You won!';
+        finalTitle.textContent = 'Congratulations!';
+        finalScore.textContent = 'You won!';
         finalScore.className = 'correct';
     } else {
         container.classList.add('lose-animation');
-        finalScore.textContent = 'Game Over!';
+        finalTitle.textContent = 'Game Over';
+        finalScore.textContent = 'Better luck next time!';
         finalScore.className = 'incorrect';
     }
     
-    // Show all found words
+    // Update score stats
     const foundWords = Array.from(guessedWords).sort();
+    wordsFoundCount.textContent = foundWords.length;
+    incorrectGuessesCount.textContent = incorrectGuesses;
+    
+    // Show all found words
     finalWords.innerHTML = `<p>Words found: ${foundWords.join(', ')}</p>`;
     
     // Show the overlay
