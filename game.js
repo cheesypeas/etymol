@@ -838,7 +838,7 @@ function initGame() {
         // Enable game interaction
         document.getElementById('guess-input').disabled = false;
         document.getElementById('guess-button').disabled = false;
-        guessInput.focus();
+        // Remove automatic focus to let users look at the map first
     });
     
     document.getElementById('play-again').addEventListener('click', () => {
