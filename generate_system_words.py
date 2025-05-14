@@ -14,13 +14,13 @@ def generate_system_words():
     
     # Write to system_words.js
     with open('system_words.js', 'w') as f:
-        f.write('const SYSTEM_WORDS = new Set([\n')
+        f.write('const SYSTEM_WORDS = [\n')
         # Write words in chunks of 10 for better readability
         words_list = sorted(list(words))
         for i in range(0, len(words_list), 10):
             chunk = words_list[i:i+10]
             f.write('    ' + ', '.join(f'"{word}"' for word in chunk) + ',\n')
-        f.write(']);\n')
+        f.write('];\n')
     
     print(f"Generated system_words.js with {len(words)} words")
 

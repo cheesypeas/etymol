@@ -1,4 +1,4 @@
-const SYSTEM_WORDS = new Set([
+const SYSTEM_WORDS = [
     "aa", "aaa", "aachen", "aaliyah", "aardvark", "aardvarks", "aaron", "ab", "abaci", "aback",
     "abacus", "abacuses", "abaft", "abalone", "abalones", "abandon", "abandoned", "abandoning", "abandonment", "abandons",
     "abase", "abased", "abasement", "abases", "abash", "abashed", "abashes", "abashing", "abasing", "abate",
@@ -7302,4 +7302,4 @@ const SYSTEM_WORDS = new Set([
     "zubenelgenubi", "zubeneschamali", "zucchini", "zucchinis", "zukor", "zulu", "zulus", "zuni", "zwieback", "zwingli",
     "zworykin", "zygote", "zygotes", "zyrtec", "zyuganov", "zürich", "ångström", "éclair", "éclairs", "éclat",
     "élan", "émigré", "émigrés", "épée", "épées", "étude", "études",
-]);
+];
