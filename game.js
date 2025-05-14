@@ -64,8 +64,8 @@ function countNonEnglishWords(tree) {
     function traverse(node) {
         if (!node) return;
         
-        // Check current node
-        if (node.lang !== 'en') {
+        // Check current node - only count if it's non-English and not revealed
+        if (node.lang !== 'en' && !revealedNodes.has(node.word)) {
             count++;
         }
         
@@ -370,7 +370,8 @@ function updateScoreDisplay() {
 // Update remaining words display
 function updateWordsDisplay() {
     const progressBar = document.getElementById('words-progress');
-    const progress = (guessedWords.size / totalEnglishWords) * 100;
+    // Subtract 1 from guessedWords.size to exclude the clue word
+    const progress = ((guessedWords.size - 1) / (totalEnglishWords - 1)) * 100;
     progressBar.style.width = `${progress}%`;
 }
 
