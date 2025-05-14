@@ -205,16 +205,24 @@ function renderTree() {
     const root = d3.hierarchy(treeData);
     treeLayout(root);
     
-    // Create SVG
+    // Create SVG with zoom behavior
     const svg = d3.select(treeContainer)
         .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
+        .call(d3.zoom()
+            .scaleExtent([0.5, 3]) // Limit zoom scale
+            .on('zoom', (event) => {
+                g.attr('transform', event.transform);
+            }))
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Create a group for all tree elements
+    const g = svg.append('g');
     
     // Draw links - only between revealed nodes
-    svg.selectAll('.link')
+    g.selectAll('.link')
         .data(root.links())
         .enter()
         .append('path')
@@ -233,14 +241,25 @@ function renderTree() {
         });
     
     // Draw nodes
-    const node = svg.selectAll('.node')
+    const node = g.selectAll('.node')
         .data(root.descendants())
         .enter()
         .append('g')
         .attr('class', 'node')
         .attr('transform', d => `translate(${d.y},${d.x})`)
         .style('opacity', d => shouldRevealNode(d) ? 1 : 0); // Hide unrevealed nodes
-    
+
+    // Add touch event handlers for nodes
+    node.on('touchstart', function(event, d) {
+        event.preventDefault(); // Prevent default touch behavior
+        if (shouldRevealNode(d)) {
+            showTooltip(event, d);
+        }
+    })
+    .on('touchend', function() {
+        hideTooltip();
+    });
+
     // Add circles to nodes
     node.append('circle')
         .attr('r', 5)
@@ -248,13 +267,13 @@ function renderTree() {
             if (shouldRevealNode(d)) {
                 return d.data.lang === 'en' ? '#ffd700' : '#fff';
             }
-            return '#333';
+            return '#444';
         });
-    
+
     // Add text labels
     node.append('text')
-        .attr('dy', '1.5em')
-        .attr('x', d => d.children ? -9 : 9)
+        .attr('dy', '.31em')
+        .attr('x', d => d.children ? -6 : 6)
         .attr('text-anchor', d => d.children ? 'end' : 'start')
         .attr('fill', d => {
             if (!shouldRevealNode(d)) {
@@ -264,35 +283,63 @@ function renderTree() {
         })
         .attr('font-weight', d => (d.data.lang === 'en') ? 'bold' : 'normal')
         .text(d => {
-            if (!shouldRevealNode(d)) {
-                return '???';
-            }
-            return d.data.word;  // Always show actual word
-        })
-        // Add tooltip behavior
-        .on('mouseover', function(event, d) {
             if (shouldRevealNode(d)) {
-                tooltip.transition()
-                    .duration(200)
-                    .style('opacity', .9);
-                let tooltipText = '';
-                if (d.data.lang !== 'en') {
-                    tooltipText += `Anglicized: ${d.data.anglicized}<br>`;
-                }
-                tooltipText += `Language: ${d.data.lang}<br>`;
-                if (d.data.gloss) {
-                    tooltipText += `Meaning: ${d.data.gloss}`;
-                }
-                tooltip.html(tooltipText)
-                    .style('left', (event.pageX + 10) + 'px')
-                    .style('top', (event.pageY - 28) + 'px');
+                return d.data.lang === 'en' ? d.data.word : anglicizeWord(d.data.word);
             }
-        })
-        .on('mouseout', function() {
-            tooltip.transition()
-                .duration(500)
-                .style('opacity', 0);
+            return '?';
         });
+
+    // Add tooltip
+    tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('opacity', 0);
+
+    // Add touch event handlers for the container
+    treeContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+    treeContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+    treeContainer.addEventListener('touchend', handleTouchEnd, { passive: false });
+}
+
+// Touch gesture handling
+let touchStartX = 0;
+let touchStartY = 0;
+let lastTouchX = 0;
+let lastTouchY = 0;
+let isPanning = false;
+
+function handleTouchStart(event) {
+    if (event.touches.length === 1) {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        lastTouchX = touchStartX;
+        lastTouchY = touchStartY;
+        isPanning = true;
+    }
+}
+
+function handleTouchMove(event) {
+    if (!isPanning) return;
+    
+    event.preventDefault();
+    
+    const touchX = event.touches[0].clientX;
+    const touchY = event.touches[0].clientY;
+    
+    const deltaX = touchX - lastTouchX;
+    const deltaY = touchY - lastTouchY;
+    
+    // Update the transform of the tree group
+    const g = d3.select('#tree-container svg g');
+    const currentTransform = d3.zoomTransform(g.node());
+    g.attr('transform', `translate(${currentTransform.x + deltaX},${currentTransform.y + deltaY}) scale(${currentTransform.k})`);
+    
+    lastTouchX = touchX;
+    lastTouchY = touchY;
+}
+
+function handleTouchEnd() {
+    isPanning = false;
 }
 
 // Check if all English words have been guessed
