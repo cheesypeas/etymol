@@ -64,7 +64,7 @@ function countNonEnglishWords(tree) {
     function traverse(node) {
         if (!node) return;
         
-        // Check current node - only count if it's non-English AND not revealed
+        // Check current node - only count if it's non-English and not revealed
         if (node.lang !== 'en' && !revealedNodes.has(node.word)) {
             count++;
         }
@@ -336,6 +336,10 @@ function handleGameOver(isWin) {
     gameOver = true;
     const container = document.querySelector('.container');
     container.classList.add('game-over');
+    
+    // Reveal the entire tree
+    allWordsRevealed = true;
+    renderTree();
     
     if (isWin) {
         container.classList.add('win-animation');
