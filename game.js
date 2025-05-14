@@ -9,6 +9,8 @@ let suggestions = [];
 let systemWords = new Set(); // Store system words
 let revealedNodes = new Set(); // Track which nodes are revealed
 let incorrectGuesses = 0; // Track number of incorrect guesses
+let maxIncorrectGuesses = 0; // Maximum allowed incorrect guesses
+let gameOver = false; // Track if game is over
 
 // Get a random word from the word list
 function getRandomWord() {
@@ -27,13 +29,56 @@ function getWordFromUrl() {
 
 // Load system words from the word list
 function loadSystemWords() {
+    console.log('Loading system words...');
+    let count = 0;
+    
     // Add all words from the game's word list
-    GAME_DATA.word_list.forEach(word => systemWords.add(word.toLowerCase()));
+    GAME_DATA.word_list.forEach(word => {
+        systemWords.add(word.toLowerCase());
+        count++;
+    });
+    console.log(`Added ${count} words from game data`);
     
     // Add all related words from all puzzles
     Object.values(GAME_DATA.words).forEach(wordData => {
-        wordData.related_words.forEach(word => systemWords.add(word.toLowerCase()));
+        wordData.related_words.forEach(word => {
+            systemWords.add(word.toLowerCase());
+            count++;
+        });
     });
+    console.log(`Added ${count} total words from game data and related words`);
+    
+    // Add all system words
+    SYSTEM_WORDS.forEach(word => {
+        systemWords.add(word.toLowerCase());
+    });
+    console.log(`Added ${SYSTEM_WORDS.size} words from system_words.js`);
+    console.log(`Total system words: ${systemWords.size}`);
+}
+
+// Count non-English words in the tree
+function countNonEnglishWords(tree) {
+    let count = 0;
+    
+    function traverse(node) {
+        if (!node) return;
+        
+        // Check current node
+        if (node.lang !== 'en') {
+            if (!revealedNodes.has(node.word)) {
+                count++;
+            }
+        }
+        
+        // Traverse children
+        if (node.children) {
+            node.children.forEach(traverse);
+        }
+    }
+    
+    // Start traversal from the root
+    traverse(tree);
+    return count;
 }
 
 // Initialize revealed nodes with the path from root to clue word
@@ -233,8 +278,75 @@ function renderTree() {
         });
 }
 
+// Check if all English words have been guessed
+function checkWinCondition() {
+    const root = d3.hierarchy(treeData);
+    const englishWords = new Set();
+    
+    function traverse(node) {
+        if (!node || !node.data) return;
+        if (node.data.lang === 'en') {
+            englishWords.add(node.data.word);
+        }
+        if (node.children) {
+            node.children.forEach(traverse);
+        }
+    }
+    traverse(root);
+    
+    // Check if all English words have been guessed
+    return Array.from(englishWords).every(word => guessedWords.has(word));
+}
+
+// Create confetti effect for win
+function createConfetti() {
+    const colors = ['#ffd700', '#c4a484', '#8b7355', '#b5651d'];
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+// Handle game over state
+function handleGameOver(isWin) {
+    gameOver = true;
+    const container = document.querySelector('.container');
+    container.classList.add('game-over');
+    
+    if (isWin) {
+        container.classList.add('win-animation');
+        createConfetti();
+        document.getElementById('feedback').textContent = 'Congratulations! You won!';
+        document.getElementById('feedback').className = 'correct show';
+    } else {
+        container.classList.add('lose-animation');
+        document.getElementById('feedback').textContent = 'Game Over! Try again?';
+        document.getElementById('feedback').className = 'incorrect show';
+    }
+    
+    // Disable input and buttons
+    document.getElementById('guess-input').disabled = true;
+    document.getElementById('guess-button').disabled = true;
+    document.getElementById('reveal-button').disabled = true;
+}
+
+// Update score display
+function updateScoreDisplay() {
+    const remaining = maxIncorrectGuesses - incorrectGuesses;
+    document.getElementById('remaining-guesses').textContent = remaining;
+}
+
 // Handle word guesses
 function handleGuess() {
+    if (gameOver) return;
+    
     const guessInput = document.getElementById('guess-input');
     const guess = guessInput.value.toLowerCase().trim();
     const guessContainer = document.querySelector('.guess-container');
@@ -301,6 +413,11 @@ function handleGuess() {
         revealedNodes.add(guess);
         
         renderTree();
+        
+        // Check for win condition
+        if (checkWinCondition()) {
+            handleGameOver(true);
+        }
     } else {
         // Incorrect guess - shake the input
         guessContainer.classList.add('shake');
@@ -313,7 +430,17 @@ function handleGuess() {
         if (nextNode) {
             revealedNodes.add(nextNode.data.word);
             incorrectGuesses++;
+            updateScoreDisplay();
             renderTree();
+            
+            // Check for loss condition
+            if (incorrectGuesses >= maxIncorrectGuesses) {
+                handleGameOver(false);
+            }
+        } else {
+            // No more nodes to reveal - this shouldn't happen if counting is correct
+            console.error('No more nodes to reveal but incorrectGuesses < maxIncorrectGuesses');
+            handleGameOver(false);
         }
     }
     
@@ -338,12 +465,18 @@ function handleGuessInput(event) {
         return;
     }
     
+    console.log(`Searching for "${searchTerm}" in ${systemWords.size} system words`);
+    
     // Filter valid words that haven't been guessed
     suggestions = Array.from(systemWords)
-        .filter(word => 
-            word.includes(searchTerm) && 
-            !guessedWords.has(word)
-        )
+        .filter(word => {
+            const matches = word.includes(searchTerm);
+            const notGuessed = !guessedWords.has(word);
+            if (matches && !notGuessed) {
+                console.log(`Word "${word}" matches but was already guessed`);
+            }
+            return matches && notGuessed;
+        })
         .sort((a, b) => {
             // Sort by whether the word is in the current puzzle's related words
             const aIsRelated = GAME_DATA.words[currentWord].related_words.includes(a);
@@ -353,6 +486,8 @@ function handleGuessInput(event) {
             return a.localeCompare(b);
         })
         .slice(0, 10); // Limit to 10 suggestions
+    
+    console.log(`Found ${suggestions.length} suggestions:`, suggestions);
     
     if (suggestions.length > 0) {
         showSuggestions(suggestions);
@@ -503,6 +638,10 @@ function initGame() {
     
     // Initialize revealed nodes with the path from root to clue word
     initializeRevealedNodes();
+    
+    // Calculate max incorrect guesses (number of unrevealed non-English words)
+    maxIncorrectGuesses = countNonEnglishWords(treeData);
+    updateScoreDisplay();
     
     // Render the initial tree (only showing path to clue word)
     renderTree();

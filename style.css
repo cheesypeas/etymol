@@ -182,4 +182,61 @@ button:disabled {
 .guess-container {
     display: inline-flex;
     align-items: center;
+}
+
+#score-display {
+    font-size: 18px;
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+#remaining-guesses {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Win/Loss animations */
+@keyframes win {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes lose {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-10px); }
+    75% { transform: translateY(10px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+.win-animation {
+    animation: win 1s ease-in-out;
+}
+
+.lose-animation {
+    animation: lose 1s ease-in-out;
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: var(--accent-color);
+    animation: confetti 3s ease-in-out forwards;
+}
+
+/* Game over state */
+.game-over {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.game-over input,
+.game-over button {
+    pointer-events: none;
 } 
