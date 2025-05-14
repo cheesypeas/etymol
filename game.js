@@ -513,21 +513,19 @@ function handleGuess() {
         feedback.className = 'incorrect';
         feedback.classList.add('show');
         
-        // Reveal one more node for incorrect guess
+        // Increment incorrect guesses
+        incorrectGuesses++;
+        updateScoreDisplay();
+        
+        // Try to reveal one more node for incorrect guess
         const nextNode = getNextNodeToReveal();
         if (nextNode) {
             revealedNodes.add(nextNode.data.word);
-            incorrectGuesses++;
-            updateScoreDisplay();
             renderTree();
-            
-            // Check for loss condition
-            if (incorrectGuesses >= maxIncorrectGuesses) {
-                handleGameOver(false);
-            }
-        } else {
-            // No more nodes to reveal - this shouldn't happen if counting is correct
-            console.error('No more nodes to reveal but incorrectGuesses < maxIncorrectGuesses');
+        }
+        
+        // Check for loss condition
+        if (incorrectGuesses >= maxIncorrectGuesses) {
             handleGameOver(false);
         }
     }
