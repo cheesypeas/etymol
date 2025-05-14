@@ -1,15 +1,28 @@
 # Etymol Game Development
 
-Etymol is an etymology-based daily word game. 
+Etymol is an etymology-based daily word game where players guess English words by exploring their etymological relationships. Players start with a clue word and must discover related English words by understanding word origins and relationships.
+
+## Project Structure
+- `game.js`: Core game logic and UI interactions
+- `explorer.js`: Tree visualization and exploration features
+- `build_trees.py`: Generates game data from etymological database
+- `generate_system_words.py`: Creates word validation list
+- `game_data.js`: Generated game puzzles and word trees
+- `system_words.js`: List of valid English words for validation
+- `index.html`: Main game interface
+- `style.css`: Game styling and animations
 
 ## Current State
 - Web-based etymology tree guessing game
 - D3.js visualization of word trees
 - English words highlighted in gold (both revealed and redacted)
-- Glosses shown as text labels below words
+- Glosses shown as tooltips on hover
 - Reveal All button for giving up
 - Clean, dark theme UI
 - Non-English words shown in anglicized form when revealed
+- Animated feedback for correct/incorrect guesses
+- Improved dropdown positioning and search functionality
+- System words-based suggestions
 
 ## Key Design Decisions
 1. Technology
@@ -47,14 +60,16 @@ data
 3. UI/UX:
    - Dark theme for better readability
    - Gold highlighting for English words (both revealed and redacted)
-   - Glosses shown as text labels (not tooltips)
+   - Tooltips for glosses and word information on hover
    - Reveal All button in red to indicate give-up action
-   - Feedback messages for correct/incorrect guesses
+   - Animated feedback for correct/incorrect guesses
    - Non-English words displayed in anglicized form for readability
    - Tree explorer with search and filtering capabilities
    - Side-by-side comparison of filtered and unfiltered trees
    - Clear indication when filtered trees are not available
    - Modern, responsive design
+   - Improved dropdown positioning under input field
+   - System words-based suggestions for better gameplay
 
 4. Game Logic:
    - Words revealed when guessed or when all children are revealed
@@ -62,6 +77,20 @@ data
    - Clue word is pre-revealed
    - Related words list for validation
    - Score-based tree selection for game puzzles
+   - System words used for suggestions and validation
+
+## Recent Changes
+- Implemented scoring system based on unrevealed non-English words
+- Added visual feedback for remaining guesses and words to find
+- Switched from system_words.txt to system_words.js for word validation
+- Improved tree generation with better scoring and filtering
+- Enhanced UI with more intuitive progress indicators
+
+## Known Issues/Limitations
+- Tree generation can be slow for complex etymologies
+- Some rare or archaic words may not be in the system words list
+- Tooltips may overlap in dense tree visualizations
+- Mobile responsiveness needs improvement
 
 ## Development Notes
 - Keep game_data.js in git (generated data)
@@ -71,6 +100,8 @@ data
 - Store both original and anglicized forms of non-English words for flexibility
 - Use tree explorer for data analysis and puzzle design
 - Generate both filtered and unfiltered trees for development
+- Ensure tooltips provide clear and concise information
+- Maintain consistent animation timing for user feedback
 
 ## Next Steps
 - Improve tree scoring and filtering criteria
@@ -80,4 +111,7 @@ data
 - Add more language variety to puzzles
 - Implement daily puzzle generation
 - Add user statistics and progress tracking
+- Consider adding keyboard shortcuts for common actions
+- Explore additional visual feedback mechanisms
+- Optimize tooltip positioning and content
 
