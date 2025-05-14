@@ -431,6 +431,32 @@ function handleGameOver(isWin) {
     // Disable input and buttons
     document.getElementById('guess-input').disabled = true;
     document.getElementById('guess-button').disabled = true;
+    
+    // Set up share results button
+    const shareButton = document.getElementById('share-results');
+    shareButton.onclick = () => {
+        // Create a more elegant score representation
+        const scoreLine = isWin 
+            ? `📚 ${foundWords.length}/${totalEnglishWords + 1} words found`
+            : `💩 ${foundWords.length}/${totalEnglishWords + 1} words found`;
+        
+        const guessesLine = `🍋 ${incorrectGuesses} incorrect guesses`;
+        
+        const shareText = `Etymol\nClue: ${currentWord}\n${scoreLine}\n${guessesLine}\nhttps://etymol.co.uk`;
+        
+        navigator.clipboard.writeText(shareText).then(() => {
+            // Show feedback
+            const originalText = shareButton.textContent;
+            shareButton.textContent = 'Copied!';
+            shareButton.disabled = true;
+            setTimeout(() => {
+                shareButton.textContent = originalText;
+                shareButton.disabled = false;
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    };
 }
 
 // Update score display
