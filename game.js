@@ -336,6 +336,10 @@ function handleGameOver(isWin) {
     const container = document.querySelector('.container');
     container.classList.add('game-over');
     
+    // Reveal the entire tree
+    allWordsRevealed = true;
+    renderTree();
+    
     if (isWin) {
         container.classList.add('win-animation');
         createConfetti();
