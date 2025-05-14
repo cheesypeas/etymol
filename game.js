@@ -85,12 +85,19 @@ function countEnglishWords(tree) {
     let count = 0;
     function traverse(node) {
         if (!node) return;
-        // Only count if it's English AND not revealed
-        if (node.lang === 'en' && !revealedNodes.has(node.word)) {
+        // Handle both raw tree data and D3 hierarchy nodes
+        const nodeData = node.data || node;
+        if (!nodeData) return;
+        
+        // Count all English words except the clue word
+        if (nodeData.lang === 'en' && nodeData.word !== currentWord) {
             count++;
         }
-        if (node.children) {
-            node.children.forEach(traverse);
+        
+        // Handle both raw tree data and D3 hierarchy nodes
+        const children = node.children || nodeData.children;
+        if (children) {
+            children.forEach(traverse);
         }
     }
     traverse(tree);
@@ -422,11 +429,18 @@ function updateScoreDisplay() {
 // Update remaining words display
 function updateWordsDisplay() {
     const progressBar = document.getElementById('words-progress');
-    const unrevealedEnglishWords = countEnglishWords(treeData);
-    // Subtract 1 from guessedWords.size to exclude the clue word
-    const guessedWordsCount = guessedWords.size - 1;
-    const totalUnrevealedEnglishWords = unrevealedEnglishWords + guessedWordsCount;
-    const progress = (guessedWordsCount / totalUnrevealedEnglishWords) * 100;
+    const totalEnglishWords = countEnglishWords(treeData);
+    const guessedWordsCount = guessedWords.size - 1; // Exclude clue word
+    const progress = (guessedWordsCount / totalEnglishWords) * 100;
+    
+    console.log('Progress calculation:', {
+        totalEnglishWords,
+        guessedWordsCount,
+        progress,
+        guessedWords: Array.from(guessedWords),
+        currentWord
+    });
+    
     progressBar.style.width = `${progress}%`;
 }
 
