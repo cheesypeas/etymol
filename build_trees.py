@@ -45,28 +45,27 @@ def load_valid_words() -> Set[str]:
     """Load words from system word list."""
     words = set()
     try:
-        # Try common system word lists
-        word_lists = [
-            '/usr/share/dict/words',  # Common on Linux
-            '/usr/dict/words',        # Alternative location
-            '/usr/share/dict/american-english',  # Debian/Ubuntu
-            '/usr/share/dict/british-english'    # Debian/Ubuntu
-        ]
-        
-        for word_list in word_lists:
-            try:
-                with open(word_list, 'r') as f:
-                    for line in f:
-                        word = line.strip().lower()
-                        # Only include words that are likely valid English words
-                        if word.isalpha() and len(word) >= 2:
-                            words.add(word)
-                print(f"Loaded {len(words)} words from {word_list}")
+        with open('system_words.js', 'r') as f:
+            content = f.read()
+            # Extract the array from the JavaScript file
+            # Format is typically: const SYSTEM_WORDS = ["word1", "word2", ...];
+            import re
+            match = re.search(r'const\s+SYSTEM_WORDS\s*=\s*\[(.*?)\];', content, re.DOTALL)
+            if match:
+                # Extract words from the array
+                word_list = match.group(1)
+                # Split by commas and clean up each word
+                for word in word_list.split(','):
+                    word = word.strip().strip('"\'')
+                    if word.isalpha() and len(word) >= 2:
+                        words.add(word.lower())
+                print(f"Loaded {len(words)} words from system_words.js")
                 return words
-            except FileNotFoundError:
-                continue
-        
-        print("No system word list found, using empty set")
+            else:
+                print("Could not find SYSTEM_WORDS array in system_words.js")
+                return set()
+    except FileNotFoundError:
+        print("system_words.js not found")
         return set()
     except Exception as e:
         print(f"Error loading word list: {str(e)}")
