@@ -11,6 +11,7 @@ let revealedNodes = new Set(); // Track which nodes are revealed
 let incorrectGuesses = 0; // Track number of incorrect guesses
 let maxIncorrectGuesses = 0; // Maximum allowed incorrect guesses
 let gameOver = false; // Track if game is over
+let totalEnglishWords = 0; // Total number of English words in the tree
 
 // Get a random word from the word list
 function getRandomWord() {
@@ -77,6 +78,22 @@ function countNonEnglishWords(tree) {
     }
     
     // Start traversal from the root
+    traverse(tree);
+    return count;
+}
+
+// Count English words in the tree
+function countEnglishWords(tree) {
+    let count = 0;
+    function traverse(node) {
+        if (!node) return;
+        if (node.lang === 'en') {
+            count++;
+        }
+        if (node.children) {
+            node.children.forEach(traverse);
+        }
+    }
     traverse(tree);
     return count;
 }
@@ -339,8 +356,22 @@ function handleGameOver(isWin) {
 
 // Update score display
 function updateScoreDisplay() {
-    const remaining = maxIncorrectGuesses - incorrectGuesses;
-    document.getElementById('remaining-guesses').textContent = remaining;
+    const guessesContainer = document.getElementById('guesses-container');
+    guessesContainer.innerHTML = ''; // Clear existing dots
+    
+    // Create dots for remaining guesses
+    for (let i = 0; i < maxIncorrectGuesses; i++) {
+        const dot = document.createElement('div');
+        dot.className = `guess-dot${i < incorrectGuesses ? ' used' : ''}`;
+        guessesContainer.appendChild(dot);
+    }
+}
+
+// Update remaining words display
+function updateWordsDisplay() {
+    const progressBar = document.getElementById('words-progress');
+    const progress = (guessedWords.size / totalEnglishWords) * 100;
+    progressBar.style.width = `${progress}%`;
 }
 
 // Handle word guesses
@@ -375,6 +406,7 @@ function handleGuess() {
         feedback.classList.add('show');
         
         guessedWords.add(guess);
+        updateWordsDisplay();
         
         // Find and reveal the path to the guessed word
         function findPathToWord(node, targetWord, path = []) {
@@ -615,6 +647,9 @@ function initGame() {
     currentWord = getWordFromUrl();
     treeData = GAME_DATA.words[currentWord].tree;
     
+    // Calculate total English words
+    totalEnglishWords = countEnglishWords(treeData);
+    
     // Add the clue word to guessed words (it's pre-revealed)
     guessedWords.add(currentWord);
     
@@ -642,6 +677,7 @@ function initGame() {
     // Calculate max incorrect guesses (number of unrevealed non-English words)
     maxIncorrectGuesses = countNonEnglishWords(treeData);
     updateScoreDisplay();
+    updateWordsDisplay();
     
     // Render the initial tree (only showing path to clue word)
     renderTree();

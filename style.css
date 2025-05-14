@@ -239,4 +239,86 @@ button:disabled {
 .game-over input,
 .game-over button {
     pointer-events: none;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+#score-display, #words-display {
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+#remaining-guesses, #remaining-words {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.guesses-container, .words-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.guess-icon {
+    color: var(--error-color);
+    font-size: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.guess-icon.used {
+    opacity: 0.3;
+}
+
+.word-icon {
+    color: var(--accent-color);
+    font-size: 24px;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.word-icon.found {
+    opacity: 1;
+}
+
+/* Add Unicode symbols for hearts and stars */
+.guess-icon::before {
+    content: "♥";
+}
+
+.word-icon::before {
+    content: "★";
+}
+
+.guess-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    opacity: 0.2;
+    transition: opacity 0.3s ease;
+}
+
+.guess-dot.used {
+    opacity: 1;
+}
+
+.progress-container {
+    width: 200px;
+    height: 4px;
+    background-color: var(--input-bg);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-color) 0%, var(--success-color) 100%);
+    width: 0%;
+    transition: width 0.3s ease;
 } 
