@@ -12,6 +12,7 @@ let incorrectGuesses = 0; // Track number of incorrect guesses
 let maxIncorrectGuesses = 0; // Maximum allowed incorrect guesses
 let gameOver = false; // Track if game is over
 let totalEnglishWords = 0; // Total number of English words in the tree
+let gameStarted = false; // Track if game has started
 
 // Get a random word from the word list
 function getRandomWord() {
@@ -395,16 +396,28 @@ function handleGameOver(isWin) {
     allWordsRevealed = true;
     renderTree();
     
+    // Show score overlay
+    const scoreOverlay = document.getElementById('score-overlay');
+    const finalScore = document.getElementById('final-score');
+    const finalWords = document.getElementById('final-words');
+    
     if (isWin) {
         container.classList.add('win-animation');
         createConfetti();
-        document.getElementById('feedback').textContent = 'Congratulations! You won!';
-        document.getElementById('feedback').className = 'correct show';
+        finalScore.textContent = 'Congratulations! You won!';
+        finalScore.className = 'correct';
     } else {
         container.classList.add('lose-animation');
-        document.getElementById('feedback').textContent = 'Game Over! Try again?';
-        document.getElementById('feedback').className = 'incorrect show';
+        finalScore.textContent = 'Game Over!';
+        finalScore.className = 'incorrect';
     }
+    
+    // Show all found words
+    const foundWords = Array.from(guessedWords).sort();
+    finalWords.innerHTML = `<p>Words found: ${foundWords.join(', ')}</p>`;
+    
+    // Show the overlay
+    scoreOverlay.classList.remove('hidden');
     
     // Disable input and buttons
     document.getElementById('guess-input').disabled = true;
@@ -783,8 +796,23 @@ function initGame() {
         }
     });
     
-    // Focus the input field
-    guessInput.focus();
+    // Set up overlay buttons
+    document.getElementById('start-game').addEventListener('click', () => {
+        document.getElementById('instructions-overlay').classList.add('hidden');
+        gameStarted = true;
+        // Enable game interaction
+        document.getElementById('guess-input').disabled = false;
+        document.getElementById('guess-button').disabled = false;
+        guessInput.focus();
+    });
+    
+    document.getElementById('play-again').addEventListener('click', () => {
+        window.location.reload();
+    });
+    
+    // Initially disable game interaction until instructions are read
+    guessInput.disabled = true;
+    document.getElementById('guess-button').disabled = true;
 }
 
 // Event listeners
