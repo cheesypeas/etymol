@@ -409,7 +409,6 @@ function handleGameOver(isWin) {
     // Disable input and buttons
     document.getElementById('guess-input').disabled = true;
     document.getElementById('guess-button').disabled = true;
-    document.getElementById('reveal-button').disabled = true;
 }
 
 // Update score display
@@ -550,13 +549,6 @@ function handleGuess() {
     
     // Hide suggestions
     hideSuggestions();
-}
-
-// Handle reveal all button click
-function handleRevealAll() {
-    allWordsRevealed = true;
-    renderTree();
-    document.getElementById('reveal-button').disabled = true;
 }
 
 // Handle guess input changes
@@ -797,7 +789,6 @@ function initGame() {
 
 // Event listeners
 document.getElementById('guess-button').addEventListener('click', handleGuess);
-document.getElementById('reveal-button').addEventListener('click', handleRevealAll);
 document.getElementById('guess-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         handleGuess();
