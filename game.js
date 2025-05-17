@@ -19,14 +19,31 @@ function getRandomWord() {
     return GAME_DATA.word_list[Math.floor(Math.random() * GAME_DATA.word_list.length)];
 }
 
-// Get word from URL parameters or use random/default
+// Get the daily word based on the current date
+function getDailyWord() {
+    // Get the current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Use the date as a seed for consistent word selection
+    const seed = today.split('-').join('');
+    const seedNum = parseInt(seed);
+    
+    // Use the seed to select a word from the list
+    const wordIndex = seedNum % GAME_DATA.word_list.length;
+    return GAME_DATA.word_list[wordIndex];
+}
+
+// Get word from URL parameters or use daily word
 function getWordFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const word = urlParams.get('word');
     if (word === 'random') {
         return getRandomWord();
     }
-    return word || GAME_DATA.word_list[0];  // Use provided word or default to first word
+    if (word) {
+        return word;  // Use provided word for testing
+    }
+    return getDailyWord();  // Use daily word by default
 }
 
 // Load system words from the word list
@@ -477,6 +494,22 @@ function handleGameOver(isWin) {
             console.error('Failed to copy text: ', err);
         });
     };
+
+    // Set up view tree button
+    const viewTreeButton = document.getElementById('view-tree');
+    viewTreeButton.onclick = () => {
+        // Hide the score overlay
+        scoreOverlay.classList.add('hidden');
+        // Remove game over state to allow interaction with the tree
+        container.classList.remove('game-over');
+        // Enable zoom and pan interactions
+        const svg = d3.select('#tree-container svg');
+        svg.call(d3.zoom()
+            .scaleExtent([0.5, 3])
+            .on('zoom', (event) => {
+                svg.select('g').attr('transform', event.transform);
+            }));
+    };
 }
 
 // Update score display
@@ -862,10 +895,6 @@ function initGame() {
         document.getElementById('guess-input').disabled = false;
         document.getElementById('guess-button').disabled = false;
         // Remove automatic focus to let users look at the map first
-    });
-    
-    document.getElementById('play-again').addEventListener('click', () => {
-        window.location.reload();
     });
     
     // Initially disable game interaction until instructions are read
