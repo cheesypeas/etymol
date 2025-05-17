@@ -22,6 +22,7 @@ Etymol is an etymology-based daily word game where players guess English words b
 - Clean, dark theme UI
 - Animated feedback for correct/incorrect guesses
 - Potentially valid words (based on sytem_words.js) shown as suggestions when user types in guess box
+- New clue word every game
 
 ## Key Design Decisions
 1. Technology
