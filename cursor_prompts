@@ -4,25 +4,24 @@ Etymol is an etymology-based daily word game where players guess English words b
 
 ## Project Structure
 - `game.js`: Core game logic and UI interactions
-- `explorer.js`: Tree visualization and exploration features
+- `explorer.js`: Tree visualization and exploration for development purposes
 - `build_trees.py`: Generates game data from etymological database
+- `game_data.js`: Generated game puzzles and word trees (output of build_trees.py)
+- 'explorer_data.js': Generated full word tree data for development purposes for use with explorer.js (output of build_trees.py)
 - `generate_system_words.py`: Creates word validation list
-- `game_data.js`: Generated game puzzles and word trees
-- `system_words.js`: List of valid English words for validation
+- `system_words.js`: List of valid English words for validation, (output of generate_system_words.py)
 - `index.html`: Main game interface
 - `style.css`: Game styling and animations
+- 'explorer_etymology.py': Investigate relations between words in the raw EtymDB data
 
 ## Current State
 - Web-based etymology tree guessing game
 - D3.js visualization of word trees
-- English words highlighted in gold (both revealed and redacted)
-- Glosses shown as tooltips on hover
-- Reveal All button for giving up
+- English words highlighted in bold
+- Language, anglicised verison, and gloss shown as tooltips on hover
 - Clean, dark theme UI
-- Non-English words shown in anglicized form when revealed
 - Animated feedback for correct/incorrect guesses
-- Improved dropdown positioning and search functionality
-- System words-based suggestions
+- Potentially valid words (based on sytem_words.js) shown as suggestions when user types in guess box
 
 ## Key Design Decisions
 1. Technology
@@ -31,7 +30,7 @@ Etymol is an etymology-based daily word game where players guess English words b
    - JS, CSS, HTML
    - No react
    - D3.js for tree visualization
-   - EtymDB for source data, laid out so:
+   - EtymDB for source data, laid out so (description copied from EtymDB github repo):
    
 
 data
@@ -47,29 +46,29 @@ data
 
 
 2. Tree Generation:
+   - Validate against system_words.js to exclude rare/unusual words
    - Minimum 5 nodes per tree
    - At least 4 English words required
    - At least 1 branching point
    - Prefer trees with multiple branches
    - Score based on language variety and tree complexity
-   - Non-English words stored with both original and anglicized forms
    - Separate filtered and unfiltered tree generation
    - Filtered trees optimized for gameplay
-   - Unfiltered trees preserve complete etymology data
+   - Unfiltered trees preserve complete etymology data, for exploration in using explorer.js for dev purposes.
 
 3. UI/UX:
+Game:
    - Dark theme for better readability
-   - Gold highlighting for English words (both revealed and redacted)
+   - Bold highlighting for English words (both revealed and redacted)
    - Tooltips for glosses and word information on hover
-   - Reveal All button in red to indicate give-up action
    - Animated feedback for correct/incorrect guesses
-   - Non-English words displayed in anglicized form for readability
+   - System words-based suggestions for better gameplay
+Explorer:
    - Tree explorer with search and filtering capabilities
    - Side-by-side comparison of filtered and unfiltered trees
    - Clear indication when filtered trees are not available
+Overall:
    - Modern, responsive design
-   - Improved dropdown positioning under input field
-   - System words-based suggestions for better gameplay
 
 4. Game Logic:
    - Words revealed when guessed or when all children are revealed
@@ -82,15 +81,14 @@ data
 ## Recent Changes
 - Implemented scoring system based on unrevealed non-English words
 - Added visual feedback for remaining guesses and words to find
-- Switched from system_words.txt to system_words.js for word validation
 - Improved tree generation with better scoring and filtering
+- Differentiate mobile and desktop layouts
 - Enhanced UI with more intuitive progress indicators
 
 ## Known Issues/Limitations
-- Tree generation can be slow for complex etymologies
-- Some rare or archaic words may not be in the system words list
+- Labels can overlap in dense tree visualizations
 - Tooltips may overlap in dense tree visualizations
-- Mobile responsiveness needs improvement
+- Game trees can be incomplete and not include all related words
 
 ## Development Notes
 - Keep game_data.js in git (generated data)
@@ -107,8 +105,6 @@ data
 - Improve tree scoring and filtering criteria
 - Add more visual polish to game interface
 - Enhance tree explorer features
-- Optimize data generation process
-- Add more language variety to puzzles
 - Implement daily puzzle generation
 - Add user statistics and progress tracking
 - Consider adding keyboard shortcuts for common actions
