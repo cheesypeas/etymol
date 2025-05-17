@@ -595,20 +595,23 @@ button:disabled {
 
 .overlay-buttons {
     display: flex;
-    gap: 12px;
+    flex-direction: column;
+    gap: 10px;
     margin-top: 20px;
+    width: 100%;
 }
 
 .secondary-button {
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    padding: 12px 24px;
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 12px 20px;
     font-size: 16px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    flex: 1;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    min-height: 44px;
+    width: 100%;
 }
 
 .secondary-button:hover {
@@ -616,16 +619,14 @@ button:disabled {
     color: var(--bg-color);
 }
 
-/* Mobile adjustments for buttons */
 @media (max-width: 600px) {
     .overlay-buttons {
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
     }
     
     .secondary-button,
     .primary-button {
-        padding: 8px 16px;
-        font-size: 14px;
+        width: 100%;
     }
 } 
