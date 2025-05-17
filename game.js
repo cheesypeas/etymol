@@ -295,13 +295,33 @@ function renderTree() {
                 return d.data.lang === 'en' ? d.data.word : anglicizeWord(d.data.word);
             }
             return '?';
+        })
+        .on('mouseover', function(event, d) {
+            if (shouldRevealNode(d)) {
+                let tooltipText = '';
+                if (d.data.lang !== 'en') {
+                    tooltipText += `Anglicized: ${d.data.anglicized}<br>`;
+                }
+                tooltipText += `Language: ${d.data.lang}<br>`;
+                if (d.data.gloss) {
+                    tooltipText += `Meaning: ${d.data.gloss}`;
+                }
+                
+                tooltip
+                    .html(tooltipText)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 28) + 'px')
+                    .transition()
+                    .duration(200)
+                    .style('opacity', 0.9);
+            }
+        })
+        .on('mouseout', function() {
+            tooltip
+                .transition()
+                .duration(500)
+                .style('opacity', 0);
         });
-
-    // Add tooltip
-    tooltip = d3.select('body')
-        .append('div')
-        .attr('class', 'tooltip')
-        .style('opacity', 0);
 
     // Add touch event handlers for the container
     treeContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
@@ -773,12 +793,15 @@ function initGame() {
         .attr('class', 'tooltip')
         .style('opacity', 0)
         .style('position', 'fixed')
-        .style('background-color', 'rgba(0, 0, 0, 0.8)')
+        .style('background-color', 'rgba(0, 0, 0, 0.9)')
         .style('color', 'white')
         .style('padding', '8px')
         .style('border-radius', '4px')
         .style('pointer-events', 'none')
-        .style('z-index', '1000');
+        .style('z-index', '1000')
+        .style('transform', 'translate(-50%, -100%)')
+        .style('margin-top', '-10px')
+        .style('display', 'block');
     
     // Load system words
     loadSystemWords();

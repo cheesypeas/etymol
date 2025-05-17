@@ -63,7 +63,6 @@ h1 {
     font-size: 12px;
     font-family: sans-serif;
     fill: var(--text-color);
-    pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
 }
@@ -172,6 +171,7 @@ button:disabled {
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     transform: translate(-50%, -100%);
     margin-top: -10px;
+    white-space: nowrap;
 }
 
 /* Animation keyframes */
